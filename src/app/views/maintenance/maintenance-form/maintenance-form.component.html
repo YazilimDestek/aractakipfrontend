@@ -1,0 +1,64 @@
+<h2 mat-dialog-title *ngIf='!editMode'>{{'MAINTENANCE.DIALOG.CREATE_TITLE' | translate }}</h2>
+<h2 mat-dialog-title *ngIf='editMode'>{{'MAINTENANCE.DIALOG.UPDATE_TITLE' | translate }}</h2>
+
+<mat-dialog-content class="mat-typography">
+    <form [formGroup] = 'maintenanceForm'>
+      
+
+
+        <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+            <mat-form-field appearance = 'outline' fxFlex>
+                <mat-label>{{'MAINTENANCE.DIALOG.INPUT.VEHICLE' | translate }}</mat-label>
+                <mat-icon matSuffix>directions_car</mat-icon>
+                <mat-select matNativeControl formControlName="vehicleTypeId" [(ngModel)]="maintenance.vehicleTypeId" disableOptionCentering >
+                    <mat-option *ngFor='let type of vehicleType' [value]=type.id > {{ type.name }} </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+
+            <mat-form-field appearance = "outline" fxFlex>
+                <mat-label>{{'MAINTENANCE.DIALOG.INPUT.MAINTENANCE_MILEAGE' | translate }}</mat-label>
+                <input type = 'number' min="0" onkeypress="if (this.value.length > 14) return false;" matInput placeholder="{{'MAINTENANCE.DIALOG.INPUT.MAINTENANCE_MILEAGE' | translate }}" formControlName="maintenanceMileage" [(ngModel)]="maintenance.maintenanceMileage" >
+                <!-- <span style="margin-left: 10px; font-size: 19px;" matSuffix>km</span> -->
+                <mat-icon matSuffix>location_searching</mat-icon>  
+            </mat-form-field>
+        </div>
+
+        <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+            <mat-form-field appearance = "outline" fxFlex>
+                <mat-label>{{'MAINTENANCE.DIALOG.INPUT.MAINTENANCE_TYPE' | translate }}</mat-label>
+                <mat-icon matSuffix>build</mat-icon>
+                <input matInput placeholder="{{'MAINTENANCE.DIALOG.INPUT.MAINTENANCE_TYPE' | translate }}" formControlName="maintenanceType" [(ngModel)]="maintenance.maintenanceType" >
+            </mat-form-field>
+
+            <mat-form-field appearance = "outline" fxFlex>
+                <mat-label>{{'MAINTENANCE.DIALOG.INPUT.REMEMBER_DATE' | translate }}</mat-label>
+                <input matInput [matDatepicker]="rememberDatePicker" formControlName="rememberDate" [(ngModel)]="maintenance.rememberDate" >
+                <mat-datepicker-toggle matSuffix [for]="rememberDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #rememberDatePicker></mat-datepicker>
+            </mat-form-field>
+        </div>
+
+
+         <div fxLayout.md="row" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+            <mat-form-field fxFlex = '85' appearance="outline" >
+                <mat-label>{{'MAINTENANCE.DIALOG.INPUT.MAINTENANCE_PATH' | translate }}</mat-label>
+                <ngx-mat-file-input (change)="fileProgress($event)" ></ngx-mat-file-input>
+                <mat-icon matSuffix> attach_file</mat-icon>
+            </mat-form-field>
+
+
+            <button matSuffix style="height: 58px; bottom: -4px;" fxFlex = '15'  mat-stroked-button (click)="uploadPhoto()">{{'MAINTENANCE.DIALOG.SUBMIT' | translate }}</button>
+            
+        </div> 
+        
+
+
+
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>{{'MAINTENANCE.GENERAL.CANCEL_BUTTON' | translate}}</button>
+    <button mat-button  [disabled]="maintenanceForm.invalid || maintenanceForm.pristine" (click)="saveMaintenance()">{{'MAINTENANCE.GENERAL.SAVE_BUTTON' | translate}}</button>
+</mat-dialog-actions>
+

@@ -1,0 +1,95 @@
+<h2 mat-dialog-title *ngIf='!editMode'>{{'EXAMINATION.POPUP.NEW' | translate }}</h2>
+<h2 mat-dialog-title *ngIf='editMode'>{{'EXAMINATION.POPUP.EDIT' | translate }}</h2>
+
+<mat-dialog-content class="mat-typography">
+    <form [formGroup] = 'examinationForm'>
+        <div fxLayout = 'column' fxLayoutAlign = 'start none' fxLayoutWrap style="width: 100%; height: 100%;">
+            
+            <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+                <mat-form-field appearance='outline' fxFlex>
+                    <mat-label>{{'EXAMINATION.POPUP.VEHICLETYPE' | translate }}</mat-label>
+                    <mat-icon matSuffix>directions_car</mat-icon>
+                    <mat-select formControlName="vehicleTypeId" [(ngModel)]="examination.vehicleTypeId" disableOptionCentering >
+                        <mat-option *ngFor='let type of vehicleTypes' [value] = type.id > {{ type?.name }} </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="isControlHasError('vehicleTypeId', 'required')">
+                        <strong>{{'EXAMINATION.VALIDATION.REQUIRED_FIELD' | translate }}</strong>
+                    </mat-error>
+                </mat-form-field>
+<!-- 
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>{{'INSPECTION.POPUP.IS_SUCCESS' | translate }}</mat-label>
+                    <mat-icon matSuffix>help_outline</mat-icon>
+                    <mat-select formControlName="isSuccess" [(ngModel)]="inspection.isSuccess" disableOptionCentering>
+                        <mat-option [value]="true">{{'INSPECTION.POPUP.SUCCESS' | translate }}</mat-option>
+                        <mat-option [value]="false">{{'INSPECTION.POPUP.UNSUCCESS' | translate }}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="isControlHasError('isSuccess', 'required')">
+                        <strong>{{'INSPECTION.VALIDATION.REQUIRED_FIELD' | translate }}</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>{{'INSPECTION.POPUP.IS_GENERAL' | translate }}</mat-label>
+                    <mat-icon matSuffix>help_outline</mat-icon>
+                    <mat-select formControlName="isGeneralInspection" [(ngModel)]="inspection.isGeneralInspection" disableOptionCentering>
+                        <mat-option [value]="true">{{'INSPECTION.POPUP.YES' | translate }}</mat-option>
+                        <mat-option [value]="false">{{'INSPECTION.POPUP.NO' | translate }}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="isControlHasError('isGeneralInspection', 'required')">
+                        <strong>{{'INSPECTION.VALIDATION.REQUIRED_FIELD' | translate }}</strong>
+                    </mat-error>
+                </mat-form-field> -->
+            </div> 
+
+            <!-- <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+                <mat-form-field appearance = "outline" fxFlex>
+                    <mat-label>{{'INSPECTION.POPUP.START' | translate }}</mat-label>
+                    <input matInput [matDatepicker]="inspectionStartPicker" formControlName="inspectionStart" [(ngModel)]="inspection.inspectionStart">
+                    <mat-datepicker-toggle matSuffix [for]="inspectionStartPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #inspectionStartPicker></mat-datepicker>
+                    <mat-error *ngIf="isControlHasError('inspectionStart', 'required')">
+                        <strong>{{'INSPECTION.VALIDATION.REQUIRED_FIELD' | translate }}</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance = "outline" fxFlex>
+                    <mat-label>{{'INSPECTION.POPUP.END' | translate }}</mat-label>
+                    <input matInput [matDatepicker]="inspectionEndPicker" formControlName="inspectionEnd" [(ngModel)]="inspection.inspectionEnd">
+                    <mat-datepicker-toggle matSuffix [for]="inspectionEndPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #inspectionEndPicker></mat-datepicker>
+                    <mat-error *ngIf="isControlHasError('inspectionEnd', 'required')">
+                        <strong>{{'INSPECTION.VALIDATION.REQUIRED_FIELD' | translate }}</strong>
+                    </mat-error>
+                </mat-form-field>
+            </div> -->
+                        
+            <mat-form-field appearance = "outline">
+                <mat-label>{{'EXAMINATION.POPUP.MILEAGE' | translate }}</mat-label>
+                <input type="number"  matInput placeholder="{{'EXAMINATION.POPUP.MILEAGE' | translate }}" formControlName="mileage" [(ngModel)]="examination.mileage">
+                <span matSuffix>KM</span>
+                <mat-error *ngIf="isControlHasError('mileage', 'required')">
+                    <strong>{{'EXAMINATION.VALIDATION.REQUIRED_FIELD' | translate }}</strong>
+                </mat-error>
+            </mat-form-field>
+
+        <!--     <div fxLayout.md="row" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+                <mat-form-field fxFlex = '85' appearance="outline" >
+                    <mat-label>{{'INSPECTION.POPUP.DOCUMENT' | translate }}</mat-label>
+                    <ngx-mat-file-input formControlName="documentPath" [(ngModel)]="inspection.documentPath" (change)="fileProgress($event)" ></ngx-mat-file-input>
+                    <mat-icon matSuffix> insert_photo</mat-icon>
+                </mat-form-field>
+
+
+                <button matSuffix style="height: 58px; bottom: -4px;" fxFlex = '15' mat-stroked-button (click)="onSubmit()">{{'INSPECTION.POPUP.SUBMIT' | translate }}</button>
+                
+            </div> -->
+
+        </div>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>{{'EXAMINATION.GENERAL.CANCEL_BUTTON' | translate }}</button>
+    <button mat-button  [disabled]="examinationForm.invalid" (click)="saveExamination()">{{'EXAMINATION.GENERAL.SAVE_BUTTON' | translate }}</button>
+</mat-dialog-actions>

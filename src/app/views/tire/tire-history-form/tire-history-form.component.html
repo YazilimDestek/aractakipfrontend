@@ -1,0 +1,71 @@
+<h2 mat-dialog-title *ngIf='!editMode'>{{'TIRE_HISTORY.DIALOG.CREATE_TITLE' | translate }}</h2>
+<h2 mat-dialog-title *ngIf='editMode'>{{'TIRE_HISTORY.DIALOG.UPDATE_TITLE' | translate }}</h2>
+
+<mat-dialog-content class="mat-typography">
+    <form [formGroup] = 'tireHistoryForm'>
+      
+
+
+        <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+            <mat-form-field appearance = 'outline' fxFlex>
+                <mat-label>{{'TIRE_HISTORY.DIALOG.INPUT.VEHICLE' | translate }}</mat-label>
+                <mat-icon matSuffix>directions_car</mat-icon>
+                <mat-select matNativeControl formControlName="vehicleId" [(ngModel)]="tireHistory.vehicleId" disableOptionCentering >
+                    <mat-option *ngFor='let vehicle of vehicles' [value]=vehicle.id > {{ vehicle?.brand?.name }} {{ vehicle?.model?.name }} {{ vehicle?.modelYear }} </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+
+            <mat-form-field appearance = "outline" fxFlex>
+                <mat-label>{{'TIRE_HISTORY.DIALOG.INPUT.TIRE' | translate }}</mat-label>
+                <mat-select matNativeControl formControlName="tireId" [(ngModel)]="tireHistory.tireId" disableOptionCentering >
+                    <mat-option *ngFor='let tire of tires' [value]=tire.id > {{tire?.serialNumber}} {{tire?.brand}}</mat-option>
+                </mat-select>  
+            </mat-form-field>
+        </div>
+
+        <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+            <mat-form-field appearance = "outline" fxFlex>
+                <mat-label>{{'TIRE_HISTORY.DIALOG.INPUT.HOLE_ORDER' | translate }}</mat-label>
+                
+                <input type="number" matInput placeholder="{{'TIRE_HISTORY.DIALOG.INPUT.HOLE_ORDER' | translate }}" formControlName="holeOrder" [(ngModel)]="tireHistory.holeOrder">
+            </mat-form-field>
+            <mat-form-field appearance = "outline" fxFlex>
+                <mat-label>{{'TIRE_HISTORY.DIALOG.INPUT.INSTALLED_DATE' | translate }}</mat-label>
+                <input matInput [matDatepicker]="installedDatePicker" formControlName="installedDate" [(ngModel)]="tireHistory.installedDate" >
+                <mat-datepicker-toggle matSuffix [for]="installedDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #installedDatePicker></mat-datepicker>
+            </mat-form-field>
+
+            
+        </div>
+        <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+            <mat-form-field appearance = "outline" fxFlex>
+                <mat-label>{{'TIRE_HISTORY.DIALOG.INPUT.REMOVED_REASON' | translate }}</mat-label>
+                <input type="text" matInput placeholder="{{'TIRE_HISTORY.DIALOG.INPUT.REMOVED_REASON' | translate }}" formControlName="removedReason" [(ngModel)]="tireHistory.removedReason">
+            </mat-form-field>
+            <mat-form-field appearance = "outline" fxFlex>
+                <mat-label>{{'TIRE_HISTORY.DIALOG.INPUT.REMOVED_DATE' | translate }}</mat-label>
+                <input matInput [matDatepicker]="removedDatePicker" formControlName="removedDate" [(ngModel)]="tireHistory.removedDate" >
+                <mat-datepicker-toggle matSuffix [for]="removedDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #removedDatePicker></mat-datepicker>
+            </mat-form-field>
+
+            
+        </div>
+
+
+
+
+
+        
+
+
+
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>{{'TIRE_HISTORY.GENERAL.CANCEL_BUTTON' | translate}}</button>
+    <button mat-button  [disabled]="tireHistoryForm.invalid || tireHistoryForm.pristine" (click)="saveTireHistory()">{{'TIRE_HISTORY.GENERAL.SAVE_BUTTON' | translate}}</button>
+</mat-dialog-actions>
+

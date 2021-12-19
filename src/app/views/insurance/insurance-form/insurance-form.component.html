@@ -1,0 +1,59 @@
+
+  <h2 mat-dialog-title *ngIf="editMode == false">{{ 'INSURANCE.DIALOG.CREATE_TITLE' | translate }}</h2>
+  <h2 mat-dialog-title *ngIf="editMode == true">{{ 'INSURANCE.DIALOG.UPDATE_TITLE' | translate }}</h2>
+  <mat-dialog-content class="mat-typography" >
+      <form [formGroup]="insuranceForm">
+
+<div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+  <mat-form-field appearance = 'outline' fxFlex>
+        <mat-label>{{'INSURANCE.DIALOG.INPUT.VEHICLE_ID' | translate }}</mat-label>
+        <mat-icon matSuffix>directions_car</mat-icon>
+        <mat-select matNativeControl formControlName="vehicleId" [(ngModel)]="insurance.vehicleId" disableOptionCentering >
+            <mat-option *ngFor='let vehicle of vehicles' [value]=vehicle.id > {{ vehicle?.brand?.name }} {{ vehicle?.model?.name }} </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" fxFlex>
+        <mat-label>{{ 'INSURANCE.DIALOG.INPUT.COMPANY' | translate }}</mat-label>
+        <input matInput type="text" placeholder="{{ 'INSURANCE.DIALOG.INPUT.COMPANY' | translate }}" formControlName="insuranceFirm" [(ngModel)]="insurance.insuranceFirm">
+    </mat-form-field>
+    <mat-form-field appearance="outline" fxFlex>
+        <mat-label>{{ 'INSURANCE.DIALOG.INPUT.TYPE' | translate }}</mat-label>
+        <mat-select matNativeControl  disableOptionCentering placeholder="{{ 'INSURANCE.DIALOG.INPUT.TYPE' | translate }}" formControlName="insuranceType" [(ngModel)]="insurance.insuranceType">
+            <mat-option value="Kasko">Kasko</mat-option>
+            <mat-option value="Zorunlu Trafik">Zorunlu Trafik</mat-option>
+            <mat-option value="Makine Kırılması">Makine Kırılması</mat-option>
+          </mat-select>
+    </mat-form-field>
+</div>
+
+<div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+   
+
+
+    <mat-form-field appearance = "outline" fxFlex>
+        <mat-label>{{'INSURANCE.DIALOG.INPUT.START_DATE' | translate }}</mat-label>
+        <input matInput [matDatepicker]="dateStartPicker" formControlName="dateStart" [(ngModel)]="insurance.dateStart" required>
+        <mat-datepicker-toggle matSuffix [for]="dateStartPicker"></mat-datepicker-toggle>
+        <mat-datepicker #dateStartPicker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field appearance = "outline" fxFlex>
+        <mat-label>{{'INSURANCE.DIALOG.INPUT.END_DATE' | translate }}</mat-label>
+        <input matInput [matDatepicker]="dateEndPicker" formControlName="dateEnd" [(ngModel)]="insurance.dateEnd" required>
+        <mat-datepicker-toggle matSuffix [for]="dateEndPicker"></mat-datepicker-toggle>
+        <mat-datepicker #dateEndPicker></mat-datepicker>
+    </mat-form-field>
+
+
+
+
+
+
+</div>
+
+</form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>{{'INSURANCE.GENERAL.CANCEL_BUTTON' | translate}}</button>
+    <button mat-button  [disabled]="insuranceForm.invalid || insuranceForm.pristine" (click)="saveInsurance()">{{'INSURANCE.GENERAL.SAVE_BUTTON' | translate}}</button>
+</mat-dialog-actions>

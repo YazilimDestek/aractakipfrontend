@@ -1,0 +1,305 @@
+ <div class="container p-24" fusePerfectScrollbar fxLayout="column"fxLayoutGap="10px">
+ 
+  <mat-card >
+    <mat-card-header>
+     <mat-card-title>{{ 'EXAMINATION.CONTENTITLE.VEHICLES_FROM_EXAMINATION' | translate}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div style="margin-bottom:5px;">
+        <!-- <button mat-raised-button (click)="isFilterOpen = !isFilterOpen"> {{ 'EXAMINATION.EXPORT.FILTER_BUTTON' | translate}} </button>
+        <button mat-raised-button (click)="newExamination()" style="float: right; margin-bottom: 5px;">{{'EXAMINATION.TABLE.NEW' | translate }}</button>
+        <button mat-raised-button style="margin-right: 2px;float: right;"(click)="printToExcel()"> {{ 'EXAMINATION.EXPORT.OUT' | translate}} </button>
+        -->
+      </div>
+     <!--  <div *ngIf="isFilterOpen" style="margin-bottom: 5px;">
+        <mat-card>
+          <div fxLayout.md="row wrap" fxLayoutAlign="space-between none" fxLayout.lt-md="column" fxLayoutGap="5px">
+      
+                 <mat-form-field appearance="outline" fxFlex class="filter-input">
+              <mat-label>{{ 'EXAMINATION.FILTER.SEARCH_FOR_VEHICLE_TYPE' | translate }}</mat-label>
+              <mat-select matNativeControl  disableOptionCentering [(ngModel)]="filter.vehicleTypeId">
+                <mat-option *ngFor="let vehicleType of vehicleTypes" [value]=vehicleType.id>{{vehicleType?.name}}</mat-option>
+              </mat-select>
+            </mat-form-field> 
+                <mat-form-field appearance="outline" fxFlex class="filter-input">
+              <mat-label>{{ 'EXAMINATION.FILTER.SEARCH_FOR_MİLEAGE' | translate }}</mat-label>
+              <input matInput type="number" placeholder="{{ 'EXAMINATION.FILTER.SEARCH_FOR_MİLEAGE' | translate }}" [(ngModel)]="filter.mileage">
+            </mat-form-field> 
+           
+          </div>
+          <div fxLayout="column">
+            <div>
+              <button mat-raised-button style="float: right;" (click)="getFilter()"> {{ 'EXAMINATION.EXPORT.FILTER_BUTTON' | translate}} </button>
+              <button mat-raised-button style="float: right;margin-right:10px; " class="orange-300-bg" (click)="getreset()" > {{ 'EXAMINATION.EXPORT.RESET' | translate}} </button>
+  
+            </div>
+          </div>
+        </mat-card>
+      </div> -->
+    </mat-card-content>
+  
+  </mat-card>
+
+
+
+
+  <mat-card  >
+    <mat-card-header>
+     <mat-card-title>{{ 'EXAMINATION.CONTENTITLE.EXAMINATION_RESULTS' | translate}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div>
+        <div style="margin-bottom:5px;">
+          <button mat-raised-button color="accent" (click)="isInformationFilterOpen = !isInformationFilterOpen" > {{ 'EXAMINATION.EXPORT.FILTER_BUTTON' | translate}} </button>  
+          <button mat-raised-button (click)="newExaminationInformation()" style="float: right;margin-right: 2px; ">{{'EXAMINATION.INFORMATIONTABLE.NEW_INFORMATION' | translate }}</button>
+          <button mat-raised-button style="margin-right: 2px;float: right;"(click)="printToExcelInformation()"> {{ 'EXAMINATION.EXPORT.OUT' | translate}} </button> 
+           <!-- <button mat-raised-button (click)="isInformationOpenImport = !isInformationOpenImport;" style="margin-bottom: 5px;float: right;margin-right: 10px;"> {{'EXAMINATION.EXPORT.IN' | translate}}</button>  -->
+        </div>
+   <!--      <div *ngIf="isInformationFilterOpen" style="margin-bottom: 5px;">
+          <mat-card>
+            <div fxLayout.md="row wrap" fxLayoutAlign="space-between none" fxLayout.lt-md="column" fxLayoutGap="5px">
+        
+                  
+             
+
+              <mat-form-field appearance="outline" fxFlex class="InformationFilter-input">
+                <mat-label>{{ 'EXAMINATION.FILTER.SEARCH_FOR_KEYWORD' | translate }}</mat-label>
+                <input matInput type="text" placeholder="{{ 'EXAMINATION.FILTER.SEARCH_FOR_KEYWORD' | translate }}"  [(ngModel)]="filter.keyword"  >
+                
+              </mat-form-field> 
+
+             
+
+
+          
+              
+             
+            </div>
+            <div fxLayout="column">
+              <div>
+               
+                <button mat-raised-button style="float: right;" (click)="getInformationFilter()"> {{ 'EXAMINATION.EXPORT.FILTER_BUTTON' | translate}} </button>
+                <button mat-raised-button style="float: right;margin-right:10px; " class="orange-300-bg" (click)="getInformaionreset()" > {{ 'EXAMINATION.EXPORT.RESET' | translate}} </button>
+    
+              </div>
+            </div>
+          </mat-card>
+        </div> 
+     -->
+    
+    
+      <mat-card *ngIf="isInformationOpenImport" style="width: 100%;margin-bottom: 5px;">
+        <input #excelFile type="file" /> 
+        <button mat-raised-button (click)="processExcelFileInformation()" >{{'EXAMINATION.EXPORT.STARTTRANSFER'   | translate}}</button>
+        <button mat-raised-button (click)="clearcalcerInformation()">{{'EXAMINATION.EXPORT.CANCEL' | translate}}</button>
+    </mat-card>
+ 
+        
+    <div class="mat-elevation-z4">
+  
+            <table mat-table #informationSort='matSort' [dataSource]='dataInformationSource' matSort>
+              <ng-container matColumnDef="brand">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'EXAMINATION.INFORMATIONTABLE.BRAND' | translate}} </th>
+                <td mat-cell *matCellDef="let element"> {{element?.vehicle?.brand?.name}} </td>
+              </ng-container>
+        
+              <ng-container matColumnDef="model">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'EXAMINATION.INFORMATIONTABLE.MODEL' | translate}}</th>
+                <td mat-cell *matCellDef="let element"> {{element?.vehicle?.model?.name}} </td>
+              </ng-container>
+              <ng-container matColumnDef="plateNumber">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'EXAMINATION.INFORMATIONTABLE.PLAQUE' | translate}}</th>
+                <td mat-cell *matCellDef="let element"> {{element?.vehicle?.plateNumber}} </td>
+              </ng-container>
+                
+                
+                
+              
+    
+                <ng-container matColumnDef="examinationDate">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'EXAMINATION.INFORMATIONTABLE.EXAMINATION_DATE' | translate }}</th>
+                    <td mat-cell *matCellDef="let row"> {{row.examinationDate | date: "dd/MM/yyyy"}} </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="examinationResult">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'EXAMINATION.INFORMATIONTABLE.EXAMINATION_RESULT' | translate }}</th>
+                    <td mat-cell *matCellDef="let row"> {{row.examinationResult}} </td>
+                      
+                </ng-container>
+    
+                 <ng-container matColumnDef="examinationResultDocument">
+                    <th mat-header-cell *matHeaderCellDef>{{'EXAMINATION.INFORMATIONTABLE.EXAMINATION_RESULT_DOCUMENT' | translate }}</th>
+                    <td mat-cell *matCellDef="let row">
+                        
+                    </td>
+                </ng-container> 
+    
+               
+    
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef style="width: 10%;">{{'EXAMINATION.TABLE.ACTIONS' | translate }}</th>
+                    <td mat-cell *matCellDef="let row" (click)="$event.stopPropagation()">
+                        <button mat-icon-button [matMenuTriggerFor]='belowMenu'>
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #belowMenu='matMenu' yPosition='below'>
+                            <button mat-menu-item (click)="updateExaminationInformation(row)">
+                                <mat-icon>edit</mat-icon>
+                                <span>{{'EXAMINATION.TABLE.EDIT' | translate }}</span>
+                            </button>
+    
+                            <button mat-menu-item (click)="deleteExaminationInformation(row)">
+                                <mat-icon>delete</mat-icon>
+                                <span>{{'EXAMINATION.TABLE.DELETE' | translate }}</span>
+                            </button>
+                            
+                          
+    
+                        </mat-menu>
+                    </td>
+                </ng-container>
+    
+                <tr mat-header-row *matHeaderRowDef='displayedColumnsInformation'></tr>
+                <tr mat-row *matRowDef='let row; columns: displayedColumnsInformation' (click)="updateExaminationInformation(row)"></tr>
+            </table>
+                <mat-paginator #informationPaginator [length]="100" style="width: 100%;"
+                  [pageSize]="10"
+                  [pageSizeOptions]="[5, 10, 25, 50]">
+                </mat-paginator>
+        
+    </div>
+    </div>
+      
+      
+      
+    </mat-card-content>
+  
+  </mat-card>
+ 
+
+ 
+  <mat-card >
+    <mat-card-header>
+     <mat-card-title>{{ 'EXAMINATION.CONTENTITLE.EXAMINATION_DEFINITIONS' | translate}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div >
+        <div style="margin-bottom:5px;">
+          <button mat-raised-button color="accent" (click)="isFilterOpen = !isFilterOpen"> {{ 'EXAMINATION.EXPORT.FILTER_BUTTON' | translate}} </button>
+          <button mat-raised-button (click)="newExamination()" style="float: right; margin-bottom: 5px;">{{'EXAMINATION.TABLE.NEW' | translate }}</button>
+          <button mat-raised-button style="margin-right: 2px;float: right;"(click)="printToExcelDefinition()"> {{ 'EXAMINATION.EXPORT.OUT' | translate}} </button> 
+         <!-- <button mat-raised-button (click)="isOpenImport = !isOpenImport;" style="margin-bottom: 5px;float: right;margin-right: 10px;"> {{'EXAMINATION.EXPORT.IN' | translate}}</button>  -->
+
+        </div>
+        <div *ngIf="isFilterOpen" style="margin-bottom: 5px;">
+          <mat-card>
+            <div fxLayout.md="row wrap" fxLayoutAlign="space-between none" fxLayout.lt-md="column" fxLayoutGap="5px">
+        
+                   <mat-form-field appearance="outline" fxFlex class="filter-input">
+                <mat-label>{{ 'EXAMINATION.FILTER.SEARCH_FOR_VEHICLE_TYPE' | translate }}</mat-label>
+                <mat-select matNativeControl  disableOptionCentering [(ngModel)]="filter.vehicleTypeId">
+                  <mat-option *ngFor="let vehicleType of vehicleTypes" [value]=vehicleType.id>{{vehicleType?.name}}</mat-option>
+                </mat-select>
+              </mat-form-field> 
+                  <mat-form-field appearance="outline" fxFlex class="filter-input">
+                <mat-label>{{ 'EXAMINATION.FILTER.SEARCH_FOR_MİLEAGE' | translate }}</mat-label>
+                <input matInput type="number" placeholder="{{ 'EXAMINATION.FILTER.SEARCH_FOR_MİLEAGE' | translate }}" [(ngModel)]="filter.mileage">
+              </mat-form-field> 
+             
+            </div>
+            <div fxLayout="column">
+              <div>
+                <button mat-raised-button style="float: right;" (click)="getFilter()"> {{ 'EXAMINATION.EXPORT.FILTER_BUTTON' | translate}} </button>
+                <button mat-raised-button style="float: right;margin-right:10px; " class="orange-300-bg" (click)="getreset()" > {{ 'EXAMINATION.EXPORT.RESET' | translate}} </button>
+    
+              </div>
+            </div>
+          </mat-card>
+        </div>
+    
+        <mat-card *ngIf="isOpenImport" style="width: 100%;margin-bottom: 5px;">
+          <input #excelFile type="file" /> 
+          <button mat-raised-button (click)="processExcelFileDefinition()" >{{'EXAMINATION.EXPORT.STARTTRANSFER'   | translate}}</button>
+          <button mat-raised-button (click)="clearcalcer()">{{'EXAMINATION.EXPORT.CANCEL' | translate}}</button>
+      </mat-card>
+   
+    <div class="mat-elevation-z8">
+        
+            
+            <table #sort='matSort' mat-table [dataSource]='dataSource' matSort>
+                
+                <ng-container matColumnDef="vehicleType">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'EXAMINATION.TABLE.VEHICLETYPE' | translate }}</th>
+                    <td mat-cell *matCellDef="let row"> {{row.vehicleType?.name}}
+                         </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="mileage">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'EXAMINATION.TABLE.MILEAGE' | translate }}</th>
+                    <td mat-cell *matCellDef="let row"> {{row.mileage}} </td>
+                </ng-container>
+    
+                <!-- <ng-container matColumnDef="documentPath">
+                    <th mat-header-cell *matHeaderCellDef>{{'EXAMINATION.TABLE.DOCUMENT' | translate }}</th>
+                    <td style="padding: 5px;" mat-cell *matCellDef="let row"> 
+                        <img *ngIf="row.documentPath" style="width: 50px;" [src]="row.documentPath" alt=""/>    
+                    </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="isSuccess">
+                    <th mat-header-cell *matHeaderCellDef>{{'EXAMINATION.TABLE.IS_SUCCESS' | translate }}</th>
+                    <td mat-cell *matCellDef="let row">
+                        <mat-icon *ngIf="row.isSuccess" else nonactive class="active-icon green-600 s-16">check</mat-icon>
+                        <mat-icon *ngIf="!row.isSuccess" class="active-icon red-500 s-16">close</mat-icon>
+                    </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="examinationStart">
+                    <th mat-header-cell *matHeaderCellDef>{{'EXAMINATION.TABLE.START' | translate }}</th>
+                    <td mat-cell *matCellDef="let row"> {{row.examinationStart | date: "dd/MM/yyyy"}} </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="examinationEnd">
+                    <th mat-header-cell *matHeaderCellDef>{{'EXAMINATION.TABLE.END' | translate }}</th>
+                    <td mat-cell *matCellDef="let row"> {{row.examinationEnd | date: "dd/MM/yyyy"}} </td>
+                </ng-container>  -->
+    
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef style="width: 10%;">{{'EXAMINATION.TABLE.ACTIONS' | translate }}</th>
+                    <td mat-cell *matCellDef="let row" (click)="$event.stopPropagation()">
+                        <button mat-icon-button [matMenuTriggerFor]='belowMenu'>
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #belowMenu='matMenu' yPosition='below'>
+                            <button mat-menu-item (click)="updateExamination(row)">
+                                <mat-icon>edit</mat-icon>
+                                <span>{{'EXAMINATION.TABLE.EDIT' | translate }}</span>
+                            </button>
+    
+                            <button mat-menu-item (click)="deleteExamination(row)">
+                                <mat-icon>delete</mat-icon>
+                                <span>{{'EXAMINATION.TABLE.DELETE' | translate }}</span>
+                            </button>
+                            
+                          
+    
+                        </mat-menu>
+                    </td>
+                </ng-container>
+    
+                <tr mat-header-row *matHeaderRowDef='displayedColumns'></tr>
+                <tr mat-row *matRowDef='let row; columns: displayedColumns' (click)="updateExamination(row)"></tr>
+            </table>
+                <mat-paginator #examinationPaginator [length]="100" style="width: 100%;"
+                  [pageSize]="10"
+                  [pageSizeOptions]="[5, 10, 25, 50]">
+                </mat-paginator>
+        
+    </div>
+    </div>
+    </mat-card-content>
+  
+  </mat-card>
+ 
+</div>
+

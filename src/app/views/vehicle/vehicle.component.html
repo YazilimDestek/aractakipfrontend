@@ -1,0 +1,519 @@
+
+<div class="container p-24" fusePerfectScrollbar fxLayout="column">
+  <div style="margin-bottom:5px;">
+    <button mat-raised-button color="accent" style="margin-right: 2px;" (click)="isFilterOpen = !isFilterOpen"> {{ 'VEHICLE.GENERAL.FILTER_BUTTON' | translate}} </button>
+    <!-- <button mat-raised-button (click)="isFieldsOpen = !isFieldsOpen"> {{ 'VEHICLE.GENERAL.FIELD_DEFINITION_BUTTON' | translate}} </button> -->
+    <button mat-button mat-raised-button [matMenuTriggerFor]="menu">{{ 'VEHICLE.GENERAL.FIELD_DEFINITION_BUTTON' | translate}}</button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="clickMenuItem($event.target.value)" value="brand">Marka</button>
+              <button mat-menu-item (click)="clickMenuItem($event.target.value)" value="model">Model</button>
+              <button mat-menu-item (click)="clickMenuItem($event.target.value)" value="vehicleType">Araç Tipi</button>
+              <button mat-menu-item (click)="clickMenuItem($event.target.value)" value="engine">Motor</button>
+              <button mat-menu-item (click)="clickMenuItem($event.target.value)" value="fuelTank">Yakıt Tankı</button>
+              <button mat-menu-item (click)="clickMenuItem($event.target.value)" value="hydraulicTank">Hidrolik Tankı</button>
+            </mat-menu>
+    <button mat-raised-button style="float: right;" (click)="newVehicle()"> {{ 'VEHICLE.GENERAL.NEW_VEHICLE_BUTTON' | translate}} </button>
+    <button mat-raised-button style="margin-right: 2px;float: right;"> {{ 'VEHICLE.GENERAL.EXPORT_BUTTON' | translate}} </button>
+  </div>
+  <div *ngIf="isBrandShow" style="margin-bottom: 5px;" class="mat-elevation-z4">
+    <mat-card fxLayout="column">
+      <mat-card-subtitle style="margin-bottom : 0px">{{'VEHICLE.TYPE_DEFINITION.BRAND.CARD.BRAND_DEFINITION' | translate}}
+        <button style="float:right;" mat-icon-button (click)="reset()">X</button>
+      </mat-card-subtitle>
+      <mat-content>
+        <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+          <div class="mat-elevation-z4" fxFlex>
+            <table mat-table [dataSource]="brandDataSource">
+              <ng-container matColumnDef="brand">
+                <th mat-header-cell *matHeaderCellDef> {{'VEHICLE.TYPE_DEFINITION.BRAND.TABLE.BRAND' | translate}} </th>
+                <td mat-cell *matCellDef="let element">{{element?.name}} </td>
+              </ng-container>
+        
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef style="width: 10%;">{{'VEHICLE.TYPE_DEFINITION.BRAND.TABLE.ACTIONS' | translate}}</th>
+                <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation()">
+                  <button mat-icon-button [matMenuTriggerFor]="belowMenu">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #belowMenu="matMenu" yPosition="below">
+                    <button mat-menu-item (click)="updateBrand(element);">
+                      <mat-icon>edit</mat-icon>
+                      <span>{{'VEHICLE.GENERAL.EDIT_BUTTON' | translate}}</span>
+                    </button>
+                    <button mat-menu-item (click)="deleteBrand(element.id)">
+                        <mat-icon>delete</mat-icon>
+                        <span>{{'VEHICLE.GENERAL.DELETE_BUTTON' | translate}}</span>
+                    </button>
+                  </mat-menu>
+                </td>
+              </ng-container>
+            
+              <tr mat-header-row *matHeaderRowDef="brandColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: brandColumns;" ></tr>
+            </table>
+            <mat-paginator #brandPaginator [length]="brands.length" style="width: 100%;"
+                    [pageSize]="5"
+                    [pageSizeOptions]="[5, 10, 25]">
+            </mat-paginator>
+          </div>
+            <mat-card fxFlex class="mat-elevation-z4">
+              <mat-card-subtitle *ngIf="!editMode">{{'VEHICLE.TYPE_DEFINITION.BRAND.CARD.NEW_BRAND' | translate}}</mat-card-subtitle>
+              <mat-card-subtitle *ngIf="editMode">{{'VEHICLE.TYPE_DEFINITION.BRAND.CARD.UPDATE_BRAND' | translate}}</mat-card-subtitle>
+              <mat-content>
+                <div fxLayoutAlign="start none" fxLayout="column">
+                  <mat-form-field appearance="outline" fxFlex style="font-size: 12px;margin-bottom: -1.25em;">
+                    <mat-label>{{'VEHICLE.TYPE_DEFINITION.BRAND.INPUT.BRAND' | translate}}</mat-label>
+                    <input matInput type="text" placeholder="{{'VEHICLE.TYPE_DEFINITION.BRAND.INPUT.BRAND' | translate}}" [(ngModel)]="brand.name">
+                  </mat-form-field>
+                  <div>
+                    <button *ngIf="!editMode" mat-raised-button type="button" style="float: right;" (click)="saveBrand()">{{'VEHICLE.TYPE_DEFINITION.BRAND.INPUT.SAVE_BUTTON' | translate}}</button>
+                    <button *ngIf="!editMode" mat-raised-button type="button" style="float: right;margin-right: 2px;" (click)="brand={}">{{'VEHICLE.TYPE_DEFINITION.BRAND.INPUT.CLEAR_BUTTON' | translate}}</button>
+                    <button *ngIf="editMode" mat-raised-button type="button" style="float: right;" (click)="saveBrand()">{{'VEHICLE.TYPE_DEFINITION.BRAND.INPUT.UPDATE_BUTTON' | translate}}</button>
+                    <button *ngIf="editMode" mat-raised-button type="button" style="float: right;margin-right: 2px;" (click)="brand={};editMode=false;">{{'VEHICLE.TYPE_DEFINITION.BRAND.INPUT.CANCEL_BUTTON' | translate}}</button>
+                  </div>
+                </div>
+              </mat-content>
+            </mat-card>
+        </div>
+      </mat-content>
+    </mat-card>
+  </div>
+  <div *ngIf="isModelShow" style="margin-bottom: 5px;" class="mat-elevation-z4">
+    <mat-card fxLayout="column">
+      <mat-card-subtitle style="margin-bottom : 0px">{{'VEHICLE.TYPE_DEFINITION.MODEL.CARD.MODEL_DEFINITION' | translate}}
+        <button style="float:right;" mat-icon-button (click)="reset()">X</button>
+      </mat-card-subtitle>
+      <mat-content>
+        <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+          <div class="mat-elevation-z4" fxFlex>
+            <table mat-table [dataSource]="modelDataSource">
+              <ng-container matColumnDef="model">
+                <th mat-header-cell *matHeaderCellDef> {{'VEHICLE.TYPE_DEFINITION.MODEL.TABLE.MODEL' | translate}} </th>
+                <td mat-cell *matCellDef="let element">{{element?.name}} </td>
+              </ng-container>
+        
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef style="width: 10%;">{{'VEHICLE.TYPE_DEFINITION.MODEL.TABLE.ACTIONS' | translate}}</th>
+                <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation()">
+                  <button mat-icon-button [matMenuTriggerFor]="belowMenu">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #belowMenu="matMenu" yPosition="below">
+                    <button mat-menu-item (click)="updateModel(element);">
+                      <mat-icon>edit</mat-icon>
+                      <span>{{'VEHICLE.GENERAL.EDIT_BUTTON' | translate}}</span>
+                    </button>
+                    <button mat-menu-item (click)="deleteModel(element.id)">
+                        <mat-icon>delete</mat-icon>
+                        <span>{{'VEHICLE.GENERAL.DELETE_BUTTON' | translate}}</span>
+                    </button>
+                  </mat-menu>
+                </td>
+              </ng-container>
+            
+              <tr mat-header-row *matHeaderRowDef="modelColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: modelColumns;" ></tr>
+            </table>
+            <mat-paginator #modelPaginator [length]="models.length" style="width: 100%;"
+                    [pageSize]="5"
+                    [pageSizeOptions]="[5, 10, 25]">
+            </mat-paginator>
+          </div>
+            <mat-card fxFlex class="mat-elevation-z4">
+              <mat-card-subtitle *ngIf="!editMode">{{'VEHICLE.TYPE_DEFINITION.MODEL.CARD.NEW_MODEL' | translate}}</mat-card-subtitle>
+              <mat-card-subtitle *ngIf="editMode">{{'VEHICLE.TYPE_DEFINITION.MODEL.CARD.UPDATE_MODEL' | translate}}</mat-card-subtitle>
+              <mat-content>
+                <div fxLayoutAlign="start none" fxLayout="column">
+                  <mat-form-field appearance="outline" fxFlex style="font-size: 12px;margin-bottom: -1.25em;">
+                    <mat-label>{{'VEHICLE.TYPE_DEFINITION.MODEL.INPUT.MODEL' | translate}}</mat-label>
+                    <input matInput type="text" placeholder="{{'VEHICLE.TYPE_DEFINITION.MODEL.INPUT.MODEL' | translate}}" [(ngModel)]="model.name">
+                  </mat-form-field>
+                  <div>
+                    <button *ngIf="!editMode" mat-raised-button type="button" style="float: right;" (click)="saveModel()">{{'VEHICLE.TYPE_DEFINITION.MODEL.INPUT.SAVE_BUTTON' | translate}}</button>
+                    <button *ngIf="!editMode" mat-raised-button type="button" style="float: right;margin-right: 2px;" (click)="model={}">{{'VEHICLE.TYPE_DEFINITION.MODEL.INPUT.CLEAR_BUTTON' | translate}}</button>
+                    <button *ngIf="editMode" mat-raised-button type="button" style="float: right;" (click)="saveModel()">{{'VEHICLE.TYPE_DEFINITION.MODEL.INPUT.UPDATE_BUTTON' | translate}}</button>
+                    <button *ngIf="editMode" mat-raised-button type="button" style="float: right;margin-right: 2px;" (click)="model={};editMode=false;">{{'VEHICLE.TYPE_DEFINITION.MODEL.INPUT.CANCEL_BUTTON' | translate}}</button>
+                  </div>
+                </div>
+              </mat-content>
+            </mat-card>
+        </div>
+      </mat-content>
+    </mat-card>
+  </div>
+  <div *ngIf="isVehicleTypeShow" style="margin-bottom: 5px;" class="mat-elevation-z4">
+    <mat-card fxLayout="column">
+      <mat-card-subtitle style="margin-bottom : 0px">{{'VEHICLE.TYPE_DEFINITION.VEHICLE_TYPE.CARD.VEHICLE_TYPE_DEFINITION' | translate}}
+        <button style="float:right;" mat-icon-button (click)="reset()">X</button>
+      </mat-card-subtitle>
+      <mat-content>
+        <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+          <div class="mat-elevation-z4" fxFlex>
+            <table mat-table [dataSource]="vehicleTypeDataSource">
+              <ng-container matColumnDef="vehicleType">
+                <th mat-header-cell *matHeaderCellDef> {{'VEHICLE.TYPE_DEFINITION.VEHICLE_TYPE.TABLE.VEHICLE_TYPE' | translate}} </th>
+                <td mat-cell *matCellDef="let element">{{element?.name}} </td>
+              </ng-container>
+              <ng-container matColumnDef="subType">
+                <th mat-header-cell *matHeaderCellDef> {{'VEHICLE.TYPE_DEFINITION.VEHICLE_TYPE.TABLE.SUB_TYPE' | translate}} </th>
+                <td mat-cell *matCellDef="let element">{{element?.subType}} </td>
+              </ng-container>
+        
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef style="width: 10%;">{{'VEHICLE.TYPE_DEFINITION.VEHICLE_TYPE.TABLE.ACTIONS' | translate}}</th>
+                <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation()">
+                  <button mat-icon-button [matMenuTriggerFor]="belowMenu">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #belowMenu="matMenu" yPosition="below">
+                    <button mat-menu-item (click)="updateVehicleType(element);">
+                      <mat-icon>edit</mat-icon>
+                      <span>{{'VEHICLE.GENERAL.EDIT_BUTTON' | translate}}</span>
+                    </button>
+                    <button mat-menu-item (click)="deleteVehicleType(element.id)">
+                        <mat-icon>delete</mat-icon>
+                        <span>{{'VEHICLE.GENERAL.DELETE_BUTTON' | translate}}</span>
+                    </button>
+                  </mat-menu>
+                </td>
+              </ng-container>
+            
+              <tr mat-header-row *matHeaderRowDef="vehicleTypeColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: vehicleTypeColumns;" ></tr>
+            </table>
+            <mat-paginator #vehicleTypePaginator [length]="vehicleTypes.length" style="width: 100%;"
+                    [pageSize]="5"
+                    [pageSizeOptions]="[5, 10, 25]">
+            </mat-paginator>
+          </div>
+            <mat-card fxFlex class="mat-elevation-z4">
+              <mat-card-subtitle *ngIf="!editMode">{{'VEHICLE.TYPE_DEFINITION.VEHICLE_TYPE.CARD.NEW_VEHICLE_TYPE' | translate}}</mat-card-subtitle>
+              <mat-card-subtitle *ngIf="editMode">{{'VEHICLE.TYPE_DEFINITION.VEHICLE_TYPE.CARD.UPDATE_VEHICLE_TYPE' | translate}}</mat-card-subtitle>
+              <mat-content>
+                <div fxLayoutAlign="start none" fxLayout="column">
+                  <div fxLayoutAlign="start none" fxLayout="row wrap" fxLayout.lt-md="column" fxLayoutGap="3px" style="margin-bottom: -0.75em;">
+                    <mat-form-field appearance="outline" fxFlex style="font-size: 12px">
+                      <mat-label>{{'VEHICLE.TYPE_DEFINITION.VEHICLE_TYPE.INPUT.VEHICLE_TYPE' | translate}}</mat-label>
+                      <input matInput type="text" placeholder="{{'VEHICLE.TYPE_DEFINITION.VEHICLE_TYPE.INPUT.VEHICLE_TYPE' | translate}}" [(ngModel)]="vehicleType.name">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" fxFlex style="font-size: 12px;">
+                      <mat-label>{{'VEHICLE.TYPE_DEFINITION.VEHICLE_TYPE.INPUT.SUB_TYPE' | translate}}</mat-label>
+                      <input matInput type="text" placeholder="{{'VEHICLE.TYPE_DEFINITION.VEHICLE_TYPE.INPUT.SUB_TYPE' | translate}}" [(ngModel)]="vehicleType.subType">
+                    </mat-form-field>
+                  </div>
+                  <div>
+                    <button *ngIf="!editMode" mat-raised-button type="button" style="float: right;" (click)="saveVehicleType()">{{'VEHICLE.TYPE_DEFINITION.VEHICLE_TYPE.INPUT.SAVE_BUTTON' | translate}}</button>
+                    <button *ngIf="!editMode" mat-raised-button type="button" style="float: right;margin-right: 2px;" (click)="vehicleType={}">{{'VEHICLE.TYPE_DEFINITION.VEHICLE_TYPE.INPUT.CLEAR_BUTTON' | translate}}</button>
+                    <button *ngIf="editMode" mat-raised-button type="button" style="float: right;" (click)="saveVehicleType()">{{'VEHICLE.TYPE_DEFINITION.VEHICLE_TYPE.INPUT.UPDATE_BUTTON' | translate}}</button>
+                    <button *ngIf="editMode" mat-raised-button type="button" style="float: right;margin-right: 2px;" (click)="vehicleType={};editMode=false">{{'VEHICLE.TYPE_DEFINITION.VEHICLE_TYPE.INPUT.CANCEL_BUTTON' | translate}}</button>
+                  </div>
+                </div>
+              </mat-content>
+            </mat-card>
+        </div>
+      </mat-content>
+    </mat-card>
+  </div>
+  <div *ngIf="isEngineShow" style="margin-bottom: 5px;" class="mat-elevation-z4">
+    <mat-card fxLayout="column">
+      <mat-card-subtitle style="margin-bottom : 0px">{{'VEHICLE.TYPE_DEFINITION.ENGINE.CARD.ENGINE_DEFINITION' | translate}}
+        <button style="float:right;" mat-icon-button (click)="reset()">X</button>
+      </mat-card-subtitle>
+      <mat-content>
+        <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+          <div class="mat-elevation-z4" fxFlex>
+            <table mat-table [dataSource]="engineDataSource">
+              <ng-container matColumnDef="engine">
+                <th mat-header-cell *matHeaderCellDef> {{'VEHICLE.TYPE_DEFINITION.ENGINE.TABLE.ENGINE' | translate}} </th>
+                <td mat-cell *matCellDef="let element">{{element?.name}} </td>
+              </ng-container>
+        
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef style="width: 10%;">{{'VEHICLE.TYPE_DEFINITION.ENGINE.TABLE.ACTIONS' | translate}}</th>
+                <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation()">
+                  <button mat-icon-button [matMenuTriggerFor]="belowMenu">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #belowMenu="matMenu" yPosition="below">
+                    <button mat-menu-item (click)="updateEngine(element);">
+                      <mat-icon>edit</mat-icon>
+                      <span>{{'VEHICLE.GENERAL.EDIT_BUTTON' | translate}}</span>
+                    </button>
+                    <button mat-menu-item (click)="deleteEngine(element.id)">
+                        <mat-icon>delete</mat-icon>
+                        <span>{{'VEHICLE.GENERAL.DELETE_BUTTON' | translate}}</span>
+                    </button>
+                  </mat-menu>
+                </td>
+              </ng-container>
+            
+              <tr mat-header-row *matHeaderRowDef="engineColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: engineColumns;" ></tr>
+            </table>
+            <mat-paginator #enginePaginator [length]="engines.length" style="width: 100%;"
+                    [pageSize]="5"
+                    [pageSizeOptions]="[5, 10, 25]">
+            </mat-paginator>
+          </div>
+            <mat-card fxFlex class="mat-elevation-z4">
+              <mat-card-subtitle *ngIf="!editMode">{{'VEHICLE.TYPE_DEFINITION.ENGINE.CARD.NEW_ENGINE' | translate}}</mat-card-subtitle>
+              <mat-card-subtitle *ngIf="editMode">{{'VEHICLE.TYPE_DEFINITION.ENGINE.CARD.UPDATE_ENGINE' | translate}}</mat-card-subtitle>
+              <mat-content>
+                <div fxLayoutAlign="start none" fxLayout="column">
+                  <mat-form-field appearance="outline" fxFlex style="font-size: 12px;margin-bottom: -1.25em;">
+                    <mat-label>{{'VEHICLE.TYPE_DEFINITION.ENGINE.INPUT.ENGINE' | translate}}</mat-label>
+                    <input matInput type="text" placeholder="{{'VEHICLE.TYPE_DEFINITION.ENGINE.INPUT.ENGINE' | translate}}" [(ngModel)]="engine.name">
+                  </mat-form-field>
+                  <div>
+                    <button *ngIf="!editMode" mat-raised-button type="button" style="float: right;" (click)="saveEngine()">{{'VEHICLE.TYPE_DEFINITION.ENGINE.INPUT.SAVE_BUTTON' | translate}}</button>
+                    <button *ngIf="!editMode" mat-raised-button type="button" style="float: right;margin-right: 2px;" (click)="engine={}">{{'VEHICLE.TYPE_DEFINITION.ENGINE.INPUT.CLEAR_BUTTON' | translate}}</button>
+                    <button *ngIf="editMode" mat-raised-button type="button" style="float: right;" (click)="saveEngine()">{{'VEHICLE.TYPE_DEFINITION.ENGINE.INPUT.UPDATE_BUTTON' | translate}}</button>
+                    <button *ngIf="editMode" mat-raised-button type="button" style="float: right;margin-right: 2px;" (click)="editMode=false;engine={}">{{'VEHICLE.TYPE_DEFINITION.ENGINE.INPUT.CANCEL_BUTTON' | translate}}</button>
+                  </div>
+                </div>
+              </mat-content>
+            </mat-card>
+        </div>
+      </mat-content>
+    </mat-card>
+  </div>
+  <div *ngIf="isFuelTankShow" style="margin-bottom: 5px;" class="mat-elevation-z4">
+    <mat-card fxLayout="column">
+      <mat-card-subtitle style="margin-bottom : 0px">{{'VEHICLE.TYPE_DEFINITION.FUEL_TANK.CARD.FUEL_TANK_DEFINITION' | translate}}
+        <button style="float:right;" mat-icon-button (click)="reset()">X</button>
+      </mat-card-subtitle>
+      <mat-content>
+        <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+          <div class="mat-elevation-z4" fxFlex>
+            <table mat-table [dataSource]="fuelTankDataSource">
+              <ng-container matColumnDef="fuelTank">
+                <th mat-header-cell *matHeaderCellDef> {{'VEHICLE.TYPE_DEFINITION.FUEL_TANK.TABLE.FUEL_TANK' | translate}} </th>
+                <td mat-cell *matCellDef="let element">{{element?.name}} </td>
+              </ng-container>
+        
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef style="width: 10%;">{{'VEHICLE.TYPE_DEFINITION.FUEL_TANK.TABLE.ACTIONS' | translate}}</th>
+                <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation()">
+                  <button mat-icon-button [matMenuTriggerFor]="belowMenu">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #belowMenu="matMenu" yPosition="below">
+                    <button mat-menu-item (click)="updateFuelTank(element);">
+                      <mat-icon>edit</mat-icon>
+                      <span>{{'VEHICLE.GENERAL.EDIT_BUTTON' | translate}}</span>
+                    </button>
+                    <button mat-menu-item (click)="deleteFuelTank(element.id)">
+                        <mat-icon>delete</mat-icon>
+                        <span>{{'VEHICLE.GENERAL.DELETE_BUTTON' | translate}}</span>
+                    </button>
+                  </mat-menu>
+                </td>
+              </ng-container>
+            
+              <tr mat-header-row *matHeaderRowDef="fuelTankColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: fuelTankColumns;" ></tr>
+            </table>
+            <mat-paginator #fuelTankPaginator [length]="fuelTanks.length" style="width: 100%;"
+                    [pageSize]="5"
+                    [pageSizeOptions]="[5, 10, 25]">
+            </mat-paginator>
+          </div>
+            <mat-card fxFlex class="mat-elevation-z4">
+              <mat-card-subtitle *ngIf="!editMode">{{'VEHICLE.TYPE_DEFINITION.FUEL_TANK.CARD.NEW_FUEL_TANK' | translate}}</mat-card-subtitle>
+              <mat-card-subtitle *ngIf="editMode">{{'VEHICLE.TYPE_DEFINITION.FUEL_TANK.CARD.UPDATE_FUEL_TANK' | translate}}</mat-card-subtitle>
+              <mat-content>
+                <div fxLayoutAlign="start none" fxLayout="column">
+                  <mat-form-field appearance="outline" fxFlex style="font-size: 12px;margin-bottom: -1.25em;">
+                    <mat-label>{{'VEHICLE.TYPE_DEFINITION.FUEL_TANK.INPUT.FUEL_TANK' | translate}}</mat-label>
+                    <input matInput type="text" placeholder="{{'VEHICLE.TYPE_DEFINITION.FUEL_TANK.INPUT.FUEL_TANK' | translate}}" [(ngModel)]="fuelTank.name">
+                  </mat-form-field>
+                  <div>
+                    <button *ngIf="!editMode" mat-raised-button type="button" style="float: right;" (click)="saveFuelTank()">{{'VEHICLE.TYPE_DEFINITION.FUEL_TANK.INPUT.SAVE_BUTTON' | translate}}</button>
+                    <button *ngIf="!editMode" mat-raised-button type="button" style="float: right;margin-right: 2px;" (click)="fuelTank={}">{{'VEHICLE.TYPE_DEFINITION.FUEL_TANK.INPUT.CLEAR_BUTTON' | translate}}</button>
+                    <button *ngIf="editMode" mat-raised-button type="button" style="float: right;" (click)="saveFuelTank()">{{'VEHICLE.TYPE_DEFINITION.FUEL_TANK.INPUT.UPDATE_BUTTON' | translate}}</button>
+                    <button *ngIf="editMode" mat-raised-button type="button" style="float: right;margin-right: 2px;" (click)="fuelTank={};editMode=false;">{{'VEHICLE.TYPE_DEFINITION.FUEL_TANK.INPUT.CANCEL_BUTTON' | translate}}</button>
+                  </div>
+                </div>
+              </mat-content>
+            </mat-card>
+        </div>
+      </mat-content>
+    </mat-card>
+  </div>
+  <div *ngIf="isHydraulicTankShow" style="margin-bottom: 5px;" class="mat-elevation-z4">
+    <mat-card fxLayout="column">
+      <mat-card-subtitle style="margin-bottom : 0px">{{'VEHICLE.TYPE_DEFINITION.HYDRAULIC_TANK.CARD.HYDRAULIC_TANK_DEFINITION' | translate}}
+        <button style="float:right;" mat-icon-button (click)="reset()">X</button>
+      </mat-card-subtitle>
+      <mat-content>
+        <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+          <div class="mat-elevation-z4" fxFlex>
+            <table mat-table [dataSource]="hydraulicTankDataSource">
+              <ng-container matColumnDef="hydraulicTank">
+                <th mat-header-cell *matHeaderCellDef> {{'VEHICLE.TYPE_DEFINITION.HYDRAULIC_TANK.TABLE.HYDRAULIC_TANK' | translate}} </th>
+                <td mat-cell *matCellDef="let element">{{element?.name}} </td>
+              </ng-container>
+        
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef style="width: 10%;">{{'VEHICLE.TYPE_DEFINITION.HYDRAULIC_TANK.TABLE.ACTIONS' | translate}}</th>
+                <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation()">
+                  <button mat-icon-button [matMenuTriggerFor]="belowMenu">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #belowMenu="matMenu" yPosition="below">
+                    <button mat-menu-item (click)="updateHydraulicTank(element);">
+                      <mat-icon>edit</mat-icon>
+                      <span>{{'VEHICLE.GENERAL.EDIT_BUTTON' | translate}}</span>
+                    </button>
+                    <button mat-menu-item (click)="deleteHydraulicTank(element.id)">
+                        <mat-icon>delete</mat-icon>
+                        <span>{{'VEHICLE.GENERAL.DELETE_BUTTON' | translate}}</span>
+                    </button>
+                  </mat-menu>
+                </td>
+              </ng-container>
+            
+              <tr mat-header-row *matHeaderRowDef="hydraulicTankColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: hydraulicTankColumns;" ></tr>
+            </table>
+            <mat-paginator #hydraulicTankPaginator [length]="hydraulicTanks.length" style="width: 100%;"
+                    [pageSize]="5"
+                    [pageSizeOptions]="[5, 10, 25]">
+            </mat-paginator>
+          </div>
+            <mat-card fxFlex class="mat-elevation-z4">
+              <mat-card-subtitle *ngIf="!editMode">{{'VEHICLE.TYPE_DEFINITION.HYDRAULIC_TANK.CARD.NEW_HYDRAULIC_TANK' | translate}}</mat-card-subtitle>
+              <mat-card-subtitle *ngIf="editMode">{{'VEHICLE.TYPE_DEFINITION.HYDRAULIC_TANK.CARD.UPDATE_HYDRAULIC_TANK' | translate}}</mat-card-subtitle>
+              <mat-content>
+                <div fxLayoutAlign="start none" fxLayout="column">
+                  <mat-form-field appearance="outline" fxFlex style="font-size: 12px;margin-bottom: -1.25em;">
+                    <mat-label>{{'VEHICLE.TYPE_DEFINITION.HYDRAULIC_TANK.INPUT.HYDRAULIC_TANK' | translate}}</mat-label>
+                    <input matInput type="text" placeholder="{{'VEHICLE.TYPE_DEFINITION.HYDRAULIC_TANK.INPUT.HYDRAULIC_TANK' | translate}}" [(ngModel)]="hydraulicTank.name">
+                  </mat-form-field>
+                  <div>
+                    <button *ngIf="!editMode" mat-raised-button type="button" style="float: right;" (click)="saveHydraulicTank()">{{'VEHICLE.TYPE_DEFINITION.HYDRAULIC_TANK.INPUT.SAVE_BUTTON' | translate}}</button>
+                    <button *ngIf="!editMode" mat-raised-button type="button" style="float: right;margin-right: 2px;" (click)="hydraulicTank={}">{{'VEHICLE.TYPE_DEFINITION.HYDRAULIC_TANK.INPUT.CLEAR_BUTTON' | translate}}</button>
+                    <button *ngIf="editMode" mat-raised-button type="button" style="float: right;" (click)="saveHydraulicTank()">{{'VEHICLE.TYPE_DEFINITION.HYDRAULIC_TANK.INPUT.UPDATE_BUTTON' | translate}}</button>
+                    <button *ngIf="editMode" mat-raised-button type="button" style="float: right;margin-right: 2px;" (click)="hydraulicTank={};editMode=false;">{{'VEHICLE.TYPE_DEFINITION.HYDRAULIC_TANK.INPUT.CANCEL_BUTTON' | translate}}</button>
+                  </div>
+                </div>
+              </mat-content>
+            </mat-card>
+        </div>
+      </mat-content>
+    </mat-card>
+  </div>
+  <div *ngIf="isFilterOpen" style="margin-bottom: 5px;">
+    <mat-card>
+      <div fxLayout.md="row wrap" fxLayoutAlign="space-between none" fxLayout.lt-md="column" fxLayoutGap="5px">
+        <mat-form-field appearance="outline" fxFlex class="filter-input">
+          <mat-label>{{ 'VEHICLE.FILTER.SEARCH_FOR_BRAND' | translate }}</mat-label>
+          <mat-select matNativeControl  disableOptionCentering [(ngModel)]="filter.brandId">
+              <mat-option *ngFor="let brand of brands" [value]=brand.id>{{brand.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex class="filter-input">
+            <mat-label>{{ 'VEHICLE.FILTER.SEARCH_FOR_MODEL' | translate }}</mat-label>
+            <mat-select matNativeControl   disableOptionCentering [(ngModel)]="filter.modelId">
+                <mat-option *ngFor="let model of models" [value]=model.id>{{model.name}}</mat-option>
+              </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex class="filter-input">
+          <mat-label>{{ 'VEHICLE.FILTER.SEARCH_FOR_WARRANTY_END_DATE' | translate }}</mat-label>
+          <input matInput [matDatepicker]="warrantyEndDateTimePicker"  [(ngModel)]="filter.warrantyEndDate">
+          <mat-datepicker-toggle matSuffix [for]="warrantyEndDateTimePicker"></mat-datepicker-toggle>
+          <mat-datepicker #warrantyEndDateTimePicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex class="filter-input">
+          <mat-label>{{ 'VEHICLE.FILTER.SEARCH_FOR_OWNERSHIP_TYPE' | translate }}</mat-label>
+          <input matInput type="text" placeholder="{{ 'VEHICLE.FILTER.SEARCH_FOR_OWNERSHIP_TYPE' | translate }}" [(ngModel)]="filter.ownershipType">
+        </mat-form-field>
+      </div>
+      <div fxLayout="column">
+        <div>
+          <button mat-raised-button style="float: right;" (click)="getVehicles()"> {{ 'VEHICLE.GENERAL.FILTER_BUTTON' | translate}} </button>
+          <button mat-raised-button style="float: right;margin-right: 3px;" class="orange-300-bg" (click)="clearFilter()"> {{ 'VEHICLE.GENERAL.CLEAR_BUTTON' | translate}} </button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+  <div class="mat-elevation-z4">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="plateNumber">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'VEHICLE.TABLE.PLATE_NUMBER' | translate}} </th>
+        <td mat-cell *matCellDef="let element"> {{element?.plateNumber}} </td>
+      </ng-container>
+      <ng-container matColumnDef="modelYear">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'VEHICLE.TABLE.MODEL_YEAR' | translate}} </th>
+        <td mat-cell *matCellDef="let element"> {{element?.modelYear}} </td>
+      </ng-container>
+    
+      <ng-container matColumnDef="brand">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'VEHICLE.TABLE.BRAND' | translate}} </th>
+        <td mat-cell *matCellDef="let element"> {{element?.brand?.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="model">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'VEHICLE.TABLE.MODEL' | translate}}</th>
+        <td mat-cell *matCellDef="let element"> {{element?.model?.name}} </td>
+      </ng-container>
+    
+      <ng-container matColumnDef="engine">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'VEHICLE.TABLE.ENGINE' | translate}} </th>
+        <td mat-cell *matCellDef="let element"> {{element?.engine?.name}} </td>
+      </ng-container>
+    
+      <ng-container matColumnDef="warrantyEndDateTime">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'VEHICLE.TABLE.WARRANTY_END_DATE_TIME' | translate}}</th>
+        <td mat-cell *matCellDef="let element"> {{element.warrantyEndDate | date : 'dd/MM/yyyy H:mm'}}</td>
+      </ng-container>
+
+    
+      <ng-container matColumnDef="isGpsAttached">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'VEHICLE.TABLE.IS_GPS_TRACKING' | translate}}</th>
+        <td mat-cell *matCellDef="let element">
+          <mat-icon *ngIf="element.isGpsTracking" class="active-icon green-600 s-16">check</mat-icon>
+          <mat-icon *ngIf="!element.isGpsTracking" class="active-icon red-500 s-16">close</mat-icon>
+        </td>
+      </ng-container>
+    
+      <!-- <ng-container matColumnDef="ownershipType">
+        <th mat-header-cell *matHeaderCellDef>{{'VEHICLE.TABLE.OWNERSHIP_TYPE' | translate}}</th>
+        <td mat-cell *matCellDef="let element"> {{element.ownershipType}} </td>
+      </ng-container> -->
+      
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef style="width: 10%;">{{'VEHICLE.TABLE.ACTIONS' | translate}}</th>
+        <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation()">
+          <button mat-icon-button [matMenuTriggerFor]="belowMenu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #belowMenu="matMenu" yPosition="below">
+            <!-- <button mat-menu-item (click)="editItem(element)">Sil</button> -->
+            <button mat-menu-item (click)="updateVehicle(element)">
+              <mat-icon>edit</mat-icon>
+              <span>{{'VEHICLE.GENERAL.EDIT_BUTTON' | translate}}</span>
+            </button> 
+          
+            <button mat-menu-item (click)="deleteVehicle(element)">
+                <mat-icon>delete</mat-icon>
+                <span>{{'VEHICLE.GENERAL.DELETE_BUTTON' | translate}}</span>
+            </button>
+           
+          </mat-menu>
+        </td>
+      </ng-container>
+    
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="updateVehicle(row)"></tr>
+    </table>
+    <mat-paginator #paginator [length]="100" style="width: 100%;"
+     [pageSize]="10"
+     [pageSizeOptions]="[5, 10, 25, 50]">
+    </mat-paginator>
+  </div>
+  
+      
+      
+</div>

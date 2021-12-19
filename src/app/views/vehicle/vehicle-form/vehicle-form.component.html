@@ -1,0 +1,196 @@
+<h2 mat-dialog-title *ngIf="editMode == false">{{ 'VEHICLE.DIALOG.CREATE_TITLE' | translate }}</h2>
+<h2 mat-dialog-title *ngIf="editMode == true">{{ 'VEHICLE.DIALOG.UPDATE_TITLE' | translate }}</h2>
+<mat-dialog-content class="mat-typography" >
+    <form [formGroup]="vehicleForm">
+        <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.BRAND' | translate }}</mat-label>
+                <mat-select matNativeControl formControlName="brandId" [(ngModel)]="vehicle.brandId" disableOptionCentering>
+                    <mat-option *ngFor="let brand of brands" [value]=brand.id>{{brand.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.MODEL' | translate }}</mat-label>
+                <mat-select matNativeControl formControlName="modelId" [(ngModel)]="vehicle.modelId" disableOptionCentering>
+                    <mat-option *ngFor="let model of models" [value]=model.id>{{model.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.PLATE_NUMBER' | translate }}</mat-label>
+                <input type="text" matInput placeholder="{{'VEHICLE.DIALOG.INPUT.PLATE_NUMBER' | translate}}" [(ngModel)]="vehicle.plateNumber" formControlName="plateNumber">
+            </mat-form-field>
+                <!-- <input #brand placeholder="{{ 'VEHICLE.DIALOG.INPUT.BRAND' | translate }}" type="text" matInput formControlName="brandName" >
+                <div  class="custom-dropdown mat-elevation-z4">
+                    <div *ngIf="isShowDropDown">
+                        <ng-container *ngFor="let b of brands | searchFilter : getSearchValue('brand')">
+                            <div class="list-item" (click)="selectedBrand($event,b)">
+                                <p>
+                                    {{b.name}}
+                                </p>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div> -->
+                <!-- <button type="button" *ngIf="brand.value.length > 2"  [ngStyle]="{'color':'green'}" matSuffix mat-icon-button (click)="addNewItem(brand.value,'brand')">
+                    <mat-icon>add</mat-icon>
+                </button> -->
+                <!-- <mat-select matNativeControl formControlName="brandId" [(ngModel)]="vehicle.brandId" disableOptionCentering>
+                    <mat-option *ngFor="let brand of brands" [value]=brand.id>{{brand.name}}</mat-option>
+                  </mat-select> -->
+            
+            <!-- <mat-form-field appearance="outline" fxFlex (clickOutside)="isShowModels = false" (click)="isShowModels= true">
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.MODEL' | translate }}</mat-label>
+                <input #model placeholder="{{ 'VEHICLE.DIALOG.INPUT.MODEL' | translate }}" type="text" matInput formControlName="modelName" >
+                <div class="custom-dropdown mat-elevation-z4">
+                    <div *ngIf="isShowModels">
+                        <ng-container *ngFor="let m of models | searchFilter : getSearchValue('model')">
+                            <div class="list-item" (click)="selectedModel($event,m)">
+                                <p>
+                                    {{m.name}}
+                                </p>  
+                            </div>
+                        </ng-container>
+                        
+                    </div>
+                </div>
+                <button *ngIf="model.value.length > 1" [ngStyle]="{'color':'green'}" matSuffix mat-icon-button (click)="addNewItem(model.value,'model')">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </mat-form-field> -->
+        </div>
+        <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.VEHICLE_TYPE' | translate }}</mat-label>
+                <mat-select matNativeControl formControlName="vehicleTypeId" [(ngModel)]="vehicle.vehicleTypeId" disableOptionCentering>
+                    <mat-option *ngFor="let type of vehicleTypes" [value]=type.id>{{type.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.MODEL_YEAR' | translate }}</mat-label>
+                <input type="number" matInput placeholder="{{'VEHICLE.DIALOG.INPUT.MODEL_YEAR' | translate}}" [(ngModel)]="vehicle.modelYear" formControlName="modelYear">
+            </mat-form-field>
+        </div>
+        <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.ENGINE' | translate }}</mat-label>
+                <mat-select matNativeControl formControlName="engineId" [(ngModel)]="vehicle.engineId" disableOptionCentering>
+                    <mat-option *ngFor="let engine of engines" [value]=engine.id>{{engine.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.FUEL_TANK_LITERS' | translate }}</mat-label>
+                <mat-select matNativeControl formControlName="fuelTankId" [(ngModel)]="vehicle.fuelTankId" disableOptionCentering>
+                    <mat-option *ngFor="let tank of fuelTanks" [value]=tank.id>{{tank.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <!-- <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.MOTOR_SIZE_CC' | translate }}</mat-label>
+                <input type="number" matInput placeholder="{{ 'VEHICLE.DIALOG.INPUT.MOTOR_SIZE_CC' | translate }}" formControlName="motorSizeCC" [(ngModel)]="vehicle.motorSizeCC">
+                <span matSuffix>CC</span>
+            </mat-form-field> -->
+        </div>
+        <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.HYDRAULIC_TANK_CC' | translate }}</mat-label>
+                <mat-select matNativeControl formControlName="hydraulicTankId" [(ngModel)]="vehicle.hydraulicTankId" disableOptionCentering>
+                    <mat-option *ngFor="let tank of hydraulicTanks" [value]=tank.id>{{tank.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.PERSON_LIMIT' | translate }}</mat-label>
+                <input type="number" matInput placeholder="{{ 'VEHICLE.DIALOG.INPUT.PERSON_LIMIT' | translate }}" formControlName="numberOfPeople" [(ngModel)]="vehicle.numberOfPeople">
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.WARRANTY_END_DATE_TIME' | translate }}</mat-label>
+                <input matInput [matDatepicker]="warrantyEndDateTimePicker"  [(ngModel)]="vehicle.warrantyEndDate" [ngModelOptions]="{standalone: true}">
+                <mat-datepicker-toggle matSuffix [for]="warrantyEndDateTimePicker"></mat-datepicker-toggle>
+                <mat-datepicker #warrantyEndDateTimePicker></mat-datepicker>
+            </mat-form-field>
+        </div>
+        
+        <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.USAGE_TYPE' | translate }}</mat-label>
+                <input matInput type="string" placeholder="{{ 'VEHICLE.DIALOG.INPUT.USAGE_TYPE' | translate }}" formControlName="usageType" [(ngModel)]="vehicle.usageType">
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.OWNERSHIP_TYPE' | translate }}</mat-label>
+                <input matInput type="text" placeholder="{{ 'VEHICLE.DIALOG.INPUT.OWNERSHIP_TYPE' | translate }}" formControlName="ownershipType" [(ngModel)]="vehicle.ownershipType" >
+            </mat-form-field>
+        </div>
+
+        <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.INSTANT_MILEAGE' | translate }}</mat-label>
+                <input matInput type="number" placeholder="{{ 'VEHICLE.DIALOG.INPUT.INSTANT_MILEAGE' | translate }}" formControlName="instantMileage" [(ngModel)]="vehicle.instantMileage">
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.TONNAGE' | translate }}</mat-label>
+                <input matInput type="number" placeholder="{{ 'VEHICLE.DIALOG.INPUT.TONNAGE' | translate }}" formControlName="tonnage" [(ngModel)]="vehicle.tonnage" >
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.IS_GPS_TRACKING' | translate }}</mat-label>
+                <mat-select formControlName="isGpsTracking" [(ngModel)]="vehicle.isGpsTracking" disableOptionCentering>
+                    <mat-option [value]=true>Var</mat-option>
+                    <mat-option [value]=false>Yok</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        
+        <!-- <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.KILOMETER_HOURS' | translate }}</mat-label>
+                <input matInput placeholder="{{ 'VEHICLE.DIALOG.INPUT.KILOMETER_HOURS' | translate }}" formControlName="kilometersHours" [(ngModel)]="vehicle.kilometersHours">
+                
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.LAST_UPDATE_KH' | translate }}</mat-label>
+                <input matInput [matDatepicker]="lastUpdatedKHPicker" formControlName="lastUpdatedKH" [(ngModel)]="vehicle.lastUpdatedKH">
+                <mat-datepicker-toggle matSuffix [for]="lastUpdatedKHPicker"></mat-datepicker-toggle>
+                <mat-datepicker #lastUpdatedKHPicker></mat-datepicker>
+            </mat-form-field>
+            
+        </div> -->
+        
+        <!-- <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.CARRY_CAPACITY_KG' | translate }}</mat-label>
+                <input matInput placeholder="{{ 'VEHICLE.DIALOG.INPUT.CARRY_CAPACITY_KG' | translate }}" formControlName="carryCapacityKG" [(ngModel)]="vehicle.carryCapacityKG">
+                <span matSuffix>KG</span>
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.TIRE_DIMENSIONS' | translate }}</mat-label>
+                <input matInput placeholder="{{ 'VEHICLE.DIALOG.INPUT.TIRE_DIMENSIONS' | translate }}" formControlName="tireDimension" [(ngModel)]="vehicle.tireDimension">
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.IS_GPS_ATTACHED' | translate }}</mat-label>
+                <mat-select formControlName="isGpsAttached" [(ngModel)]="vehicle.isGpsAttached" disableOptionCentering>
+                    <mat-option [value]="true">Var</mat-option>
+                    <mat-option [value]="false">Yok</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div> -->
+
+
+
+        <!-- <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.PLATE_NUMBER' | translate }}</mat-label>
+                <input type="text" matInput placeholder="{{ 'VEHICLE.DIALOG.INPUT.PLATE_NUMBER' | translate }}" formControlName="plateNumber" [(ngModel)]="vehicle.plateNumber">
+                
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.SERIAL_NUMBER' | translate }}</mat-label>
+                <input type="text" matInput placeholder="{{ 'VEHICLE.DIALOG.INPUT.SERIAL_NUMBER' | translate }}" formControlName="serialNumber" [(ngModel)]="vehicle.serialNumber">
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>{{ 'VEHICLE.DIALOG.INPUT.REGISTER_NUMBER' | translate }}</mat-label>
+                <input type="text" matInput placeholder="{{ 'VEHICLE.DIALOG.INPUT.REGISTER_NUMBER' | translate }}" formControlName="registerNumber" [(ngModel)]="vehicle.registerNumber">
+            </mat-form-field>
+        </div> -->
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>{{'VEHICLE.GENERAL.CANCEL_BUTTON' | translate}}</button>
+    <button mat-button [mat-dialog-close]="true" [disabled]="vehicleForm.invalid || vehicleForm.pristine" (click)="saveVehicle()">{{'VEHICLE.GENERAL.SAVE_BUTTON' | translate}}</button>
+</mat-dialog-actions>

@@ -1,0 +1,57 @@
+<h2 mat-dialog-title *ngIf='!editMode'>{{'MAINTENANCE.DIALOG.CREATE_RESULT_TITLE' | translate }}</h2>
+<h2 mat-dialog-title *ngIf='editMode'>{{'MAINTENANCE.DIALOG.UPDATE_RESULT_TITLE' | translate }}</h2>
+
+<mat-dialog-content class="mat-typography">
+    <form [formGroup] = 'maintenanceResultForm'>
+      
+
+
+        <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+            <mat-form-field appearance = 'outline' fxFlex>
+                <mat-label>{{'MAINTENANCE.DIALOG.INPUT.VEHICLE_ID' | translate }}</mat-label>
+                <mat-icon matSuffix>directions_car</mat-icon>
+                <mat-select matNativeControl formControlName="vehicleId" [(ngModel)]="maintenance.vehicleId" disableOptionCentering >
+                    <mat-option *ngFor='let vehicle of vehicles' [value]=vehicle.id > {{ vehicle?.brand?.name }} {{ vehicle?.model?.name }} </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+
+            <mat-form-field appearance = "outline" fxFlex>
+                <mat-label>{{'MAINTENANCE.DIALOG.INPUT.MAINTENANCE_MILEAGE' | translate }}</mat-label>
+                <input type = 'number' min="0" onkeypress="if (this.value.length > 14) return false;" matInput placeholder="{{'MAINTENANCE.DIALOG.INPUT.MAINTENANCE_MILEAGE' | translate }}" formControlName="maintenanceMileage" [(ngModel)]="maintenance.maintenanceMileage">
+                
+                <mat-icon matSuffix>location_searching</mat-icon>  
+            </mat-form-field>
+        </div>
+
+        <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+            <mat-form-field appearance = "outline" fxFlex>
+                <mat-label>{{'MAINTENANCE.DIALOG.INPUT.MAINTENANCE_TYPE' | translate }}</mat-label>
+                <mat-icon matSuffix>build</mat-icon>
+                <input matInput placeholder="{{'MAINTENANCE.DIALOG.INPUT.MAINTENANCE_TYPE' | translate }}" formControlName="maintenanceType" [(ngModel)]="maintenance.maintenanceType">
+            </mat-form-field>
+            <mat-form-field appearance = "outline" fxFlex>
+                <mat-label>{{'MAINTENANCE.DIALOG.INPUT.MAINTENANCE_DATE' | translate }}</mat-label>
+                <input matInput [matDatepicker]="maintenanceDatePicker" formControlName="maintenanceDate" [(ngModel)]="maintenance.maintenanceDate" >
+                <mat-datepicker-toggle matSuffix [for]="maintenanceDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #maintenanceDatePicker></mat-datepicker>
+            </mat-form-field>
+
+            
+        </div>
+
+
+
+
+
+        
+
+
+
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>{{'MAINTENANCE.GENERAL.CANCEL_BUTTON' | translate}}</button>
+    <button mat-button  [disabled]="maintenanceResultForm.invalid || maintenanceResultForm.pristine" (click)="saveMaintenance()">{{'MAINTENANCE.GENERAL.SAVE_BUTTON' | translate}}</button>
+</mat-dialog-actions>
+

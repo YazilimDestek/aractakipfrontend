@@ -1,0 +1,238 @@
+<div class="container p-24" fusePerfectScrollbar fxLayout="column" fxLayoutGap="15px">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{ 'TIRE.TITLE' | translate}}</mat-card-title>
+        </mat-card-header>
+    <div style="margin-bottom:5px;">
+        <button mat-raised-button color="accent" (click)="isFilterOpen = !isFilterOpen"> {{ 'TIRE.EXPORT.FILTER_BUTTON' | translate}} </button>
+        <button mat-raised-button (click)="newTire()" style="margin-bottom: 5px; float: right;">{{'TIRE.TABLE.NEW' | translate }}</button>
+        <button mat-raised-button (click)="printToExcel()" style="margin-right: 2px;float: right;"> {{ 'TIRE.EXPORT.OUT' | translate}} </button>  
+        <!-- <button mat-raised-button (click)="isOpenImport = !isOpenImport;" style="margin-bottom: 5px;float: right;margin-right: 10px;"> {{'TIRE.EXPORT.IN' | translate}}</button>  -->
+    </div>
+    <div *ngIf="isFilterOpen" style="margin-bottom: 5px;" class="mat-elevation-z4">
+      <mat-card>
+        <div fxLayout.md="row wrap" fxLayoutAlign="space-between none" fxLayout.lt-md="column" fxLayoutGap="5px">
+    
+               <mat-form-field appearance="outline" fxFlex class="filter-input">
+            <mat-label>{{ 'TIRE.FILTER.SEARCH_FOR_BRAND' | translate }}</mat-label>
+            <input matInput type="text" placeholder="{{ 'TIRE.FILTER.SEARCH_FOR_BRAND' | translate }}" [(ngModel)]="filter.brand">
+          </mat-form-field> 
+              <mat-form-field appearance="outline" fxFlex class="filter-input">
+            <mat-label>{{ 'TIRE.FILTER.SEARCH_FOR_MODEL' | translate }}</mat-label>
+            <input matInput type="text" placeholder="{{ 'TIRE.FILTER.SEARCH_FOR_MODEL' | translate }}" [(ngModel)]="filter.model">
+          </mat-form-field> 
+          <mat-form-field appearance="outline" fxFlex class="filter-input">
+            <mat-label>{{ 'TIRE.FILTER.SEARCH_FOR_FIGURE' | translate }}</mat-label>
+            <input matInput type="text" placeholder="{{ 'TIRE.FILTER.SEARCH_FOR_FIGURE' | translate }}" [(ngModel)]="filter.figure">
+          </mat-form-field> 
+              <mat-form-field appearance="outline" fxFlex class="filter-input">
+            <mat-label>{{ 'TIRE.FILTER.SEARCH_FOR_SERIAL_NUMBER' | translate }}</mat-label>
+            <input matInput type="text" placeholder="{{ 'TIRE.FILTER.SEARCH_FOR_SERIAL_NUMBER' | translate }}" [(ngModel)]="filter.serialNumber">
+          </mat-form-field> 
+
+    
+        </div>
+        <div fxLayout="column">
+          <div>
+            <button mat-raised-button style="float: right;"(click)="getFilter()"> {{ 'TIRE.EXPORT.FILTER_BUTTON' | translate}} </button>
+            <button mat-raised-button style="float: right;margin-right:10px; " class="orange-300-bg" (click)="getreset()" > {{ 'TIRE.EXPORT.RESET' | translate}} </button>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+    <mat-card *ngIf="isOpenImport" style="width: 100%;margin-bottom: 5px;" class="mat-elevation-z4">
+        <input #excelFile type="file" /> 
+        <button mat-raised-button style="margin-right: 5px;"(click)="processExcelFile()" >{{'TIRE.EXPORT.STARTTRANSFER'   | translate}}</button>
+        <button mat-raised-button (click)="clearcalcer()">{{'TIRE.EXPORT.CANCEL' | translate}}</button>
+    </mat-card>
+<div class="mat-elevation-z8">
+    
+    
+        <table mat-table #sort='matSort' [dataSource]='dataSource'  matSort>
+            
+            <ng-container matColumnDef = 'brand'>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'TIRE.TABLE.BRAND' | translate }}</th>
+                <td mat-cell *matCellDef='let element'> {{ element.brand }} </td>
+            </ng-container>          
+
+            <ng-container matColumnDef = 'model'>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'TIRE.TABLE.MODEL' | translate }}</th>
+                <td mat-cell *matCellDef='let element'> {{ element.model }} </td>
+            </ng-container>
+            <ng-container matColumnDef = 'figure'>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'TIRE.TABLE.FIGURE' | translate }}</th>
+                <td mat-cell *matCellDef='let element'> {{ element.figure }} </td>
+            </ng-container>
+            
+            <!-- <ng-container matColumnDef = 'patternName'>
+                <th mat-header-cell *matHeaderCellDef>{{'TIRE.TABLE.PATTERN' | translate }}</th>
+                <td mat-cell *matCellDef='let element'> {{ element.patternName }} </td>
+            </ng-container> -->
+            
+            <ng-container matColumnDef = 'serialNumber' >
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'TIRE.TABLE.SERIAL' | translate }}</th>
+                <td mat-cell *matCellDef='let element'> {{ element.serialNumber }} </td>
+            </ng-container>
+            <ng-container matColumnDef = 'width'>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'TIRE.TABLE.WIDTH' | translate }}</th>
+                <td mat-cell *matCellDef='let element'> {{ element.width }} </td>
+            </ng-container>
+            <ng-container matColumnDef = 'height'>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'TIRE.TABLE.HEIGHT' | translate }}</th>
+                <td mat-cell *matCellDef='let element'> {{ element.height }} </td>
+            </ng-container>
+            <ng-container matColumnDef = 'rimDiameter'>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'TIRE.TABLE.RIMDIAMETER' | translate }}</th>
+                <td mat-cell *matCellDef='let element'> {{ element.rimDiameter }} </td>
+            </ng-container>
+            
+            <!-- <ng-container matColumnDef = 'purchasedDateTime'>
+                <th mat-header-cell *matHeaderCellDef>{{'TIRE.TABLE.PURCHASE' | translate }}</th>
+                <td mat-cell *matCellDef='let element'> {{ element.purchasedDateTime|date: "dd/MM/yyyy" }} </td>
+            </ng-container>
+            
+            <ng-container matColumnDef = 'madeYear'>
+                <th mat-header-cell *matHeaderCellDef>{{'TIRE.TABLE.MADE_YEAR' | translate }}</th>
+                <td mat-cell *matCellDef='let element'> {{ element.madeYear }} </td>
+            </ng-container>
+            
+            <ng-container matColumnDef = 'madeWeek'>
+                <th mat-header-cell *matHeaderCellDef>{{'TIRE.TABLE.MADE_WEEK' | translate }}</th>
+                <td mat-cell *matCellDef='let element'> {{ element.madeWeek }} </td>
+            </ng-container> -->
+
+            <ng-container matColumnDef = 'actions'>
+                <th mat-header-cell *matHeaderCellDef style="width: 10%;">{{'TIRE.TABLE.ACTIONS' | translate }}</th>
+                <td mat-cell *matCellDef='let element' (click)="$event.stopPropagation()">
+                    <button mat-icon-button [matMenuTriggerFor]="belowMenu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #belowMenu='matMenu' yPosition = 'below'>
+                        <button mat-menu-item (click)="updateTire(element)">
+                            <mat-icon>edit</mat-icon>
+                            <span>{{'TIRE.TABLE.EDIT' | translate }}</span>
+                        </button>
+
+                        <button (click)="deleteTire(element)" mat-menu-item>
+                            <mat-icon>delete</mat-icon>
+                            <span>{{'TIRE.TABLE.DELETE' | translate }}</span>
+                        </button>
+                    </mat-menu>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef='displayedColumns'></tr>
+            <!-- GÜNCELLEME FONKSİYONU YAZILACAK -->
+            <tr mat-row *matRowDef='let row; columns: displayedColumns' (click)="updateTire(row)" ></tr>
+        </table>
+            <mat-paginator #paginator [length]="100" style="width: 100%;"
+            [pageSize]="10"
+            [pageSizeOptions]="[5, 10, 25, 50]">
+            </mat-paginator>
+            
+    
+        </div>   
+    
+    </mat-card>
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{ 'TIRE_HISTORY.TITLE' | translate}}</mat-card-title>
+        </mat-card-header>
+    <div style="margin-bottom:5px;">
+        <button mat-raised-button color="accent" (click)="isHistoryFilterOpen = !isHistoryFilterOpen">{{'TIRE_HISTORY.GENERAL.FILTER_BUTTON' | translate }} </button>
+        <button mat-raised-button style="margin-bottom: 5px; float: right;" (click)="newTireHistory()">{{'TIRE_HISTORY.GENERAL.NEW_TIRE_HISTORY_BUTTON' | translate }}</button>
+        <!-- <button mat-raised-button  style="margin-right: 2px;float: right;"> {{ 'TIRE_HISTORY.GENERAL.EXPORT_BUTTON' | translate}} </button>  --> 
+        <!-- <button mat-raised-button (click)="isOpenImport = !isOpenImport;" style="margin-bottom: 5px;float: right;margin-right: 10px;"> {{'TIRE.EXPORT.IN' | translate}}</button>  -->
+    </div>
+    <div *ngIf="isHistoryFilterOpen" style="margin-bottom: 5px;" class="mat-elevation-z4">
+      <mat-card>
+        <div fxLayout.md="row wrap" fxLayoutAlign="space-between none" fxLayout.lt-md="column" fxLayoutGap="5px">
+             <section>
+                 <mat-checkbox [(ngModel)]="filterHistory.isOnVehicle" checked="filterHistory.isOnVehicle == true" [ngModelOptions]="{standalone: true}"> {{ 'TIRE_HISTORY.FILTER.SEARCH_FOR_IS_ON_VEHICLE' | translate }}</mat-checkbox>
+             </section> 
+     </div>
+        <div fxLayout.md="row wrap" fxLayoutAlign="space-between none" fxLayout.lt-md="column" fxLayoutGap="5px">
+    
+               <mat-form-field appearance="outline" fxFlex class="filter-input">
+                    <mat-label>{{ 'TIRE_HISTORY.FILTER.SEARCH_FOR_VEHICLE' | translate }}</mat-label>
+                    <mat-select matNativeControl [(ngModel)]="filterHistory.vehicleId" disableOptionCentering >
+                        <mat-option *ngFor='let vehicle of vehicles' [value]=vehicle.id > {{ vehicle?.brand?.name }} {{ vehicle?.model?.name }} {{ vehicle?.modelYear }} </mat-option>
+                    </mat-select>
+               </mat-form-field> 
+                <mat-form-field appearance="outline" fxFlex class="filter-input">
+                    <mat-label>{{ 'TIRE_HISTORY.FILTER.SEARCH_FOR_TIRE' | translate }}</mat-label>
+                    <mat-select matNativeControl [(ngModel)]="filterHistory.tireId" disableOptionCentering >
+                        <mat-option *ngFor='let tire of tires' [value]=tire.id > {{tire?.serialNumber}} {{tire?.brand}} </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                
+        </div>
+        <div fxLayout="column">
+          <div>
+            <button mat-raised-button style="float: right;"(click)="getFilterTireHistory()"> {{ 'TIRE.EXPORT.FILTER_BUTTON' | translate}} </button>
+            <button mat-raised-button style="float: right;margin-right:10px; " class="orange-300-bg" (click)="getreset()" > {{ 'TIRE.EXPORT.RESET' | translate}} </button>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+    <mat-card *ngIf="false" style="width: 100%;margin-bottom: 5px;" class="mat-elevation-z4">
+        <input #excelFile type="file" /> 
+        <button mat-raised-button style="margin-right: 5px;"(click)="processExcelFile()" >{{'TIRE.EXPORT.STARTTRANSFER'   | translate}}</button>
+        <button mat-raised-button >{{'TIRE.EXPORT.CANCEL' | translate}}</button>
+    </mat-card>
+<div class="mat-elevation-z8">
+    
+    
+        <table mat-table #sortHistory='matSort' [dataSource]='dataSourceHistory' matSort>
+            
+            <ng-container matColumnDef = 'tire'>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'TIRE_HISTORY.TABLE.TIRE' | translate }}</th>
+                <td mat-cell *matCellDef='let element'> {{ element?.tire?.serialNumber }} {{ element?.tire?.brand }} </td>
+            </ng-container>          
+
+            <ng-container matColumnDef = 'vehicle'>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'TIRE_HISTORY.TABLE.VEHICLE' | translate }}</th>
+                <td mat-cell *matCellDef='let element'> {{ element?.vehicle?.brand?.name }} {{ element?.vehicle?.model?.name }} </td>
+            </ng-container>
+            <ng-container matColumnDef = 'installedDate'>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'TIRE_HISTORY.TABLE.INSTALLED_DATE' | translate }}</th>
+                <td mat-cell *matCellDef='let element'> {{ element.installedDate | date : 'dd/MM/yyyy H:mm'}} </td>
+            </ng-container>          
+
+            <ng-container matColumnDef = 'removedDate'>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'TIRE_HISTORY.TABLE.REMOVED_DATE' | translate }}</th>
+                <td mat-cell *matCellDef='let element'> {{ element.removedDate | date : 'dd/MM/yyyy H:mm'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef = 'actions'>
+                <th mat-header-cell *matHeaderCellDef style="width: 10%;">{{'TIRE_HISTORY.TABLE.ACTIONS' | translate }}</th>
+                <td mat-cell *matCellDef='let element' (click)="$event.stopPropagation()">
+                    <button mat-icon-button [matMenuTriggerFor]="belowMenu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #belowMenu='matMenu' yPosition = 'below'>
+                        <button mat-menu-item (click)="updateTireHistory(element)">
+                            <mat-icon>edit</mat-icon>
+                            <span>{{'TIRE_HISTORY.GENERAL.EDIT_BUTTON' | translate }}</span>
+                        </button>
+
+                        <button (click)="deleteTireHistory(element)" mat-menu-item>
+                            <mat-icon>delete</mat-icon>
+                            <span>{{'TIRE_HISTORY.GENERAL.DELETE_BUTTON' | translate }}</span>
+                        </button>
+                    </mat-menu>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef='displayedHistoryColumns'></tr>
+            <!-- GÜNCELLEME FONKSİYONU YAZILACAK -->
+            <tr mat-row *matRowDef='let row; columns: displayedHistoryColumns' (click)="updateTireHistory(row)" ></tr>
+        </table>
+            <mat-paginator #paginatorHistory [length]="100" style="width: 100%;"
+            [pageSize]="10"
+            [pageSizeOptions]="[5, 10, 25, 50]">
+            </mat-paginator>
+        </div>   
+    
+    </mat-card>
+ </div>

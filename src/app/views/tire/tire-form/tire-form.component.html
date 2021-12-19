@@ -1,0 +1,128 @@
+<h2 mat-dialog-title *ngIf="!editMode">{{'TIRE.POPUP.NEW' | translate }}</h2>
+<h2 mat-dialog-title *ngIf="editMode">{{'TIRE.POPUP.EDIT' | translate }}</h2>
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]="tireForm">
+        <div fxLayout='column' fxLayoutAlign='start none' fxLayoutWrap style="width: 100%; height: 100%;">
+           
+            <div fxLayout.md = 'row wrap' fxLayoutAlign = 'start none' fxLayout.lt-md = 'column' fxLayoutGap = '5px'> 
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>{{'TIRE.POPUP.BRAND' | translate }}</mat-label>
+                    <mat-icon matSuffix>trip_origin</mat-icon>
+                    <input matInput placeholder="{{'TIRE.POPUP.BRAND' | translate }}" formControlName="brand" [(ngModel)]="tire.brand">
+                    
+                    <!-- <mat-select formControlName="brand" [(ngModel)]="tire.brand" disableOptionCentering>
+                        <mat-option *ngFor='let brand of tireBrands' [value] = brand.name > {{ brand.name }} </mat-option>
+                    </mat-select> -->
+                    <mat-error *ngIf="isControlHasError('brand', 'required')">
+                        <strong>{{'TIRE.VALIDATION.REQUIRED_FIELD' | translate }}</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance='outline' fxFlex>
+                    <mat-label>{{'TIRE.POPUP.MODEL' | translate }}</mat-label>
+                    <input matInput placeholder="{{'TIRE.POPUP.MODEL' | translate }}" formControlName="model" [(ngModel)]="tire.model">
+                    
+                    <!-- <mat-select formControlName="model" [(ngModel)]="tire.model" disableOptionCentering>
+                        <mat-option *ngFor='let season of tireSeasons' [value] = season.name > {{ season.name }} </mat-option>
+                    </mat-select> -->
+                    <mat-error *ngIf="isControlHasError('model', 'required')">
+                        <strong>{{'TIRE.VALIDATION.REQUIRED_FIELD' | translate }}</strong>
+                    </mat-error>
+                </mat-form-field>
+                
+                
+
+                <!-- <mat-form-field appearance='outline' fxFlex>
+                    <mat-label>{{'TIRE.POPUP.PATTERN' | translate }}</mat-label>
+                    <mat-icon matSuffix>lens</mat-icon>
+                    <mat-select formControlName="patternName" [(ngModel)]="tire.patternName" disableOptionCentering>
+                        <mat-option *ngFor='let model of tireModels' [value] = model.name > {{ model.name }} </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="isControlHasError('patternName', 'required')">
+                        <strong>{{'TIRE.VALIDATION.REQUIRED_FIELD' | translate }}</strong>
+                    </mat-error>
+                </mat-form-field> -->
+            </div>
+            <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+                <mat-form-field appearance = "outline" fxFlex>
+
+                    <mat-label>{{'TIRE.POPUP.FIGURE' | translate }}</mat-label>
+                    
+                    <input matInput placeholder="{{'TIRE.POPUP.FIGURE' | translate }}" formControlName="figure" [(ngModel)]="tire.figure">
+                    <mat-error *ngIf="isControlHasError('figure', 'required')">
+                        <strong>{{'TIRE.VALIDATION.REQUIRED_FIELD' | translate }}</strong>
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance = "outline" fxFlex>
+                    <mat-label>{{'TIRE.POPUP.RIMDIAMETER' | translate }}</mat-label>
+                    <input type="number" matInput placeholder="{{'TIRE.POPUP.RIMDIAMETER' | translate }}" formControlName="rimDiameter" [(ngModel)]="tire.rimDiameter">
+                    <mat-error *ngIf="isControlHasError('rimDiameter', 'required')">
+                        <strong>{{'TIRE.VALIDATION.REQUIRED_FIELD' | translate }}</strong>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="3px" > 
+                <mat-form-field appearance = "outline" fxFlex="33%">
+                    <mat-label>{{'TIRE.POPUP.SERIAL' | translate }}</mat-label>
+                    <mat-icon matSuffix>verified_user</mat-icon>
+                    <input matInput placeholder="{{'TIRE.POPUP.SERIAL' | translate }}" formControlName="serialNumber" [(ngModel)]="tire.serialNumber">
+                    <mat-error *ngIf="isControlHasError('serialNumber', 'required')">
+                        <strong>{{'TIRE.VALIDATION.REQUIRED_FIELD' | translate }}</strong>
+                    </mat-error>
+                </mat-form-field>
+                
+                <mat-form-field appearance = "outline" fxFlex="33%">
+                    <mat-label>{{'TIRE.POPUP.WIDTH' | translate }}</mat-label>
+                    <input type="number" min="0" matInput placeholder="{{'TIRE.POPUP.WIDTH' | translate }}" formControlName="width" [(ngModel)]="tire.width">
+                    <mat-error *ngIf="isControlHasError('width', 'required')">
+                        <strong>{{'TIRE.VALIDATION.REQUIRED_FIELD' | translate }}</strong>
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance = "outline" fxFlex="33%">
+                    <mat-label>{{'TIRE.POPUP.HEIGHT' | translate }}</mat-label>
+                    <input type="number" min="0" matInput placeholder="{{'TIRE.POPUP.HEIGHT' | translate }}" formControlName="height" [(ngModel)]="tire.height">
+                    <mat-error *ngIf="isControlHasError('height', 'required')">
+                        <strong>{{'TIRE.VALIDATION.REQUIRED_FIELD' | translate }}</strong>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            
+
+            <!-- <div fxLayout.md = 'row' fxLayoutAlign = 'start none' fxLayout.lt-md = 'column' fxLayoutGap = '5px'> 
+                <mat-form-field appearance="outline" fxFlex = '56'>
+                    <mat-label>{{'TIRE.POPUP.PURCHASE' | translate }}</mat-label>
+                    <input matInput [matDatepicker]="tirePurchasePicker" formControlName="purchasedDateTime" [(ngModel)]="tire.purchasedDateTime">
+                    <mat-datepicker-toggle matSuffix [for]="tirePurchasePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #tirePurchasePicker></mat-datepicker>
+                    <mat-error *ngIf="isControlHasError('purchasedDateTime', 'required')">
+                        <strong>{{'TIRE.VALIDATION.REQUIRED_FIELD' | translate }}</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance = "outline" fxFlex = '22'>
+                    <mat-label>{{'TIRE.POPUP.MADE_YEAR' | translate }}</mat-label>
+                    <input maxlength="4" matInput placeholder="{{'TIRE.POPUP.MADE_YEAR' | translate }}" formControlName="madeYear" [(ngModel)]="tire.madeYear">
+                    <mat-icon matSuffix>calendar_today</mat-icon>
+                    <mat-error *ngIf="isControlHasError('madeYear', 'required')">
+                        <strong>{{'TIRE.VALIDATION.REQUIRED_FIELD' | translate }}</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance = "outline" fxFlex = '22'>
+                    <mat-label>{{'TIRE.POPUP.MADE_WEEK' | translate }}</mat-label>
+                    <input maxlength="2" matInput placeholder="{{'TIRE.POPUP.MADE_WEEK' | translate }}" formControlName="madeWeek" [(ngModel)]="tire.madeWeek">
+                    <mat-icon matSuffix>calendar_today</mat-icon>
+                    <mat-error *ngIf="isControlHasError('madeWeek', 'required')">
+                        <strong>{{'TIRE.VALIDATION.REQUIRED_FIELD' | translate }}</strong>
+                    </mat-error>
+                </mat-form-field>
+            </div> -->
+        </div>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>{{'TIRE.POPUP.CANCEL' | translate }}</button>
+    <button mat-button  [disabled]="tireForm.invalid || tireForm.pristine" (click)="saveTire()">{{'TIRE.POPUP.SAVE' | translate }}</button>
+</mat-dialog-actions>

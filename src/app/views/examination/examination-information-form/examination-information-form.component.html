@@ -1,0 +1,57 @@
+<h2 mat-dialog-title *ngIf='!editMode'>{{'EXAMINATION.POPUP.NEW_INFORMATION' | translate }}</h2>
+<h2 mat-dialog-title *ngIf='editMode'>{{'EXAMINATION.POPUP.EDIT_INFORMATION' | translate }}</h2>
+
+<mat-dialog-content class="mat-typography">
+    <form [formGroup] = 'examinationInformationForm'>
+        <div fxLayout = 'column' fxLayoutAlign = 'start none' fxLayoutWrap style="width: 100%; height: 100%;">
+            
+                <mat-form-field appearance='outline' fxFlex>
+                    <mat-label>{{'EXAMINATION.POPUP.VEHICLEID' | translate }}</mat-label>
+                    <mat-icon matSuffix>directions_car</mat-icon>
+                    <mat-select formControlName="vehicleId" [(ngModel)]="examination.vehicleId" disableOptionCentering required>
+                        <mat-option *ngFor='let vehicle of vehicles' [value] = vehicle.id > {{ vehicle?.brand?.name}} {{ vehicle?.model?.name}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="isControlHasError('vehicleId', 'required')">
+                        <strong>{{'EXAMINATION.VALIDATION.REQUIRED_FIELD' | translate }}</strong>
+                    </mat-error>
+                </mat-form-field>
+                
+ 
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>{{'EXAMINATION.POPUP.EXAMINATION_RESULT' | translate }}</mat-label>
+                    <mat-icon matSuffix>help_outline</mat-icon>
+                    <input matInput formControlName="examinationResult" [(ngModel)]="examination.examinationResult">
+                   
+                </mat-form-field> 
+
+                <mat-form-field appearance = "outline" fxFlex>
+                    <mat-label>{{ 'EXAMINATION.POPUP.EXAMINATION_DATE' | translate }}</mat-label>
+                    <input matInput [matDatepicker]="examinationStartPicker" formControlName="examinationDate" [(ngModel)]="examination.examinationDate">
+                    <mat-datepicker-toggle matSuffix [for]="examinationStartPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #examinationStartPicker></mat-datepicker>
+                    
+                </mat-form-field>
+
+
+              
+
+             <div fxLayout.md="row" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+                <mat-form-field fxFlex = '85' appearance="outline" >
+                    <mat-label>{{'EXAMINATION.POPUP.EXAMINATION_RESULT_DOCUMENT' | translate }}</mat-label>
+                    <ngx-mat-file-input formControlName="examinationResultDocument" [(ngModel)]="examination.examinationResultDocument" (change)="fileProgress($event)" ></ngx-mat-file-input>
+                    <mat-icon matSuffix> insert_photo</mat-icon>
+                </mat-form-field>
+
+
+                <button matSuffix style="height: 58px; bottom: -4px;" fxFlex = '15' mat-stroked-button (click)="uploadPhoto()">{{'EXAMINATION.POPUP.SUBMIT' | translate }}</button>
+                
+            </div>  
+
+        </div>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>{{'EXAMINATION.GENERAL.CANCEL_BUTTON' | translate }}</button>
+    <button mat-button  [disabled]="examinationInformationForm.invalid  " (click)="saveExamination()">{{'EXAMINATION.GENERAL.SAVE_BUTTON' | translate }}</button>
+</mat-dialog-actions>

@@ -1,0 +1,124 @@
+<!-- h2 mat-dialog-title *ngIf='!editMode'> {{'NOTIFICATIONS.POPUP.NEW' | translate}} </h2>
+<h2 mat-dialog-title *ngIf='editMode'>{{'NOTIFICATIONS.POPUP.EDIT' | translate}}</h2>
+
+<mat-dialog-content class="mat-typography">
+    <form [formGroup] = 'notificationForm'>
+        <div fxLayout = 'column' fxLayoutAlign = 'start none' fxLayoutWrap style="width: 100%; height: 100%;">
+
+            <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+                <mat-form-field appearance = "outline" fxFlex>
+                    <mat-label>{{'NOTIFICATIONS.POPUP.NAME' | translate}}</mat-label>
+                    <mat-icon matSuffix>sms</mat-icon>
+                    <input matInput placeholder="{{'NOTIFICATIONS.POPUP.NAME' | translate}}" formControlName="name" [(ngModel)]="notification.name" required>
+                    <mat-error *ngIf="isControlHasError('name', 'required')">
+                        <strong>{{'NOTIFICATIONS.VALIDATION.REQUIRED_FIELD' | translate }}</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance = "outline" fxFlex>
+                    <mat-label>{{'NOTIFICATIONS.POPUP.DAYS_LEFT' | translate}}</mat-label>
+                    <mat-icon matSuffix style="margin-left: 5px;">date_range</mat-icon>
+                    <input type="number" min="0" matInput placeholder="{{'NOTIFICATIONS.POPUP.DAYS_LEFT' | translate}}" formControlName="daysLeft" [(ngModel)]="notification.daysLeft" required>
+                    <mat-error *ngIf="isControlHasError('daysLeft', 'required')">
+                        <strong>{{'NOTIFICATIONS.VALIDATION.REQUIRED_FIELD' | translate }}</strong>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+                <mat-form-field appearance = 'outline' fxFlex>
+                    <mat-label>{{'NOTIFICATIONS.POPUP.TYPE' | translate}}</mat-label>
+                    <mat-icon matSuffix>notifications</mat-icon>
+                    <mat-select formControlName="warningType" [(ngModel)]="notification.warningType" disableOptionCentering required>
+                        <mat-option *ngFor='let warning of warningTypes' [value] = warning.name > {{ warning.name }} </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="isControlHasError('warningType', 'required')">
+                        <strong>{{'NOTIFICATIONS.VALIDATION.REQUIRED_FIELD' | translate }}</strong>
+                    </mat-error>
+                </mat-form-field>
+               
+                <mat-form-field appearance = 'outline' fxFlex>
+                    <mat-label>{{'NOTIFICATIONS.POPUP.METHOD' | translate}}</mat-label>
+                    <mat-icon matSuffix>notifications_active</mat-icon>
+                    <mat-select formControlName="warningMethod" [(ngModel)]="notification.warningMethod" disableOptionCentering required>
+                        <mat-option *ngFor='let method of warningMethods' [value] = method.name > {{ method.name }} </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="isControlHasError('warningMethod', 'required')">
+                        <strong>{{'NOTIFICATIONS.VALIDATION.REQUIRED_FIELD' | translate }}</strong>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <mat-form-field appearance = "outline" fxFlex>
+                <mat-label>{{'NOTIFICATIONS.POPUP.DESCRIPTION' | translate}}</mat-label>
+                <mat-icon style="float: right;">comment</mat-icon>
+                <textarea style="height: 100px;" matInput placeholder="{{'NOTIFICATIONS.POPUP.DESCRIPTION' | translate}}" formControlName="description" [(ngModel)]="notification.description"></textarea>
+                <mat-error *ngIf="isControlHasError('description', 'required')">
+                    <strong>{{'NOTIFICATIONS.VALIDATION.REQUIRED_FIELD' | translate }}</strong>
+                </mat-error>
+            </mat-form-field>
+
+        </div>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>{{'NOTIFICATIONS.POPUP.CANCEL' | translate }}</button>
+    <button mat-button [mat-dialog-close]="true" [disabled]="notificationForm.invalid || notificationForm.pristine" (click)="saveNotification()">{{'NOTIFICATIONS.POPUP.SAVE' | translate }}</button>
+</mat-dialog-actions> -->
+
+
+
+<h2 mat-dialog-title *ngIf="editMode == false">{{ 'NOTIFICATIONS.DIALOG.CREATE_TITLE' | translate }}</h2>
+  <h2 mat-dialog-title *ngIf="editMode == true">{{ 'NOTIFICATIONS.DIALOG.UPDATE_TITLE' | translate }}</h2>
+  <mat-dialog-content class="mat-typography" >
+      <form [formGroup]="notificationForm">
+
+<div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+    <mat-form-field appearance="outline" fxFlex>
+        <mat-label>{{ 'NOTIFICATIONS.DIALOG.INPUT.NAME' | translate }}</mat-label>
+        <mat-icon matSuffix>sms</mat-icon>
+        <input matInput type="text" placeholder="{{ 'NOTIFICATIONS.DIALOG.INPUT.NAME' | translate }}" formControlName="name" [(ngModel)]="notification.name" >
+    </mat-form-field>
+    <mat-form-field appearance="outline" fxFlex>
+        <mat-label>{{ 'NOTIFICATIONS.DIALOG.INPUT.DAYS_LEFT' | translate }}</mat-label>
+        <mat-icon matSuffix style="margin-left: 5px;">date_range</mat-icon>
+        <input matInput min="0" type="number" placeholder="{{ 'NOTIFICATIONS.DIALOG.INPUT.DAYS_LEFT' | translate }}" formControlName="daysLeft" [(ngModel)]="notification.daysLeft" >
+    </mat-form-field>
+  
+    
+</div>
+
+<div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+   
+    <mat-form-field appearance="outline" fxFlex>
+        <mat-label>{{ 'NOTIFICATIONS.DIALOG.INPUT.WARNING_TYPE_ID' | translate }}</mat-label>
+        <mat-icon matSuffix>notifications</mat-icon>
+        <mat-select formControlName="warningTypeId" [(ngModel)]="notification.warningTypeId" disableOptionCentering required>
+            <mat-option *ngFor='let warning of warningTypes' [value] = warning.id > {{ warning.name }} </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" fxFlex>
+        <mat-label>{{ 'NOTIFICATIONS.DIALOG.INPUT.METHOD' | translate }}</mat-label>
+        <mat-icon matSuffix>notifications_active</mat-icon>
+        <mat-select formControlName="warningMethod" [(ngModel)]="notification.warningMethod" disableOptionCentering >
+            <mat-option value = "sms" >Kısa Mesaj (sms)</mat-option>
+            <mat-option value = "email" >E-Posta</mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+<div fxLayout.md="row wrap" fxLayoutAlign="start none" fxLayout.lt-md="column" fxLayoutGap="5px">
+    <mat-form-field appearance="outline" fxFlex>
+    <mat-label>{{ 'NOTIFICATIONS.DIALOG.INPUT.DESCRIPTION' | translate }}</mat-label>
+    <mat-icon style="float: right;">comment</mat-icon>
+    <textarea style="height: 40px;" matInput placeholder="{{'NOTIFICATIONS.DIALOG.INPUT.DESCRIPTION' | translate}}" formControlName="description" [(ngModel)]="notification.description"></textarea>
+</mat-form-field>
+</div>
+
+</form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>{{'NOTIFICATIONS.GENERAL.CANCEL_BUTTON' | translate}}</button>
+    <button mat-button  [disabled]="notificationForm.invalid || notificationForm.pristine" (click)="saveNotification()">{{'NOTIFICATIONS.GENERAL.SAVE_BUTTON' | translate}}</button>
+</mat-dialog-actions>
